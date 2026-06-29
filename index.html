@@ -6,163 +6,158 @@
   <title>Riya Virdi</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Caveat:wght@600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
 
     html, body {
-      width: 100%; height: 100%;
-      overflow: hidden;
-      background: #0a0806;
-      font-family: 'DM Sans', sans-serif;
-      cursor: none;
+      width:100%; height:100%;
+      overflow:hidden;
+      background:#0e0c0a;
+      font-family:'DM Sans',sans-serif;
+      cursor:none;
     }
 
-    #cur  { position:fixed; width:9px; height:9px; background:#fff; border-radius:50%; pointer-events:none; z-index:9999; transform:translate(-50%,-50%); mix-blend-mode:difference; }
-    #curR { position:fixed; width:30px; height:30px; border:1px solid rgba(201,169,110,.55); border-radius:50%; pointer-events:none; z-index:9998; transform:translate(-50%,-50%); transition:left .08s,top .08s; }
+    #cur  { position:fixed;width:9px;height:9px;background:#fff;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:difference; }
+    #curR { position:fixed;width:30px;height:30px;border:1px solid rgba(201,169,110,.5);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:left .08s,top .08s; }
 
-    /* ══════════════════════════════════
-       COLLAGE — CSS grid, zero gaps,
-       guaranteed full-screen coverage
-    ══════════════════════════════════ */
+    /* ═══════════════════════════════════════
+       COLLAGE  —  exact Summer Nights layout
+       Irregular mosaic grid, zero gaps, no outlines
+    ═══════════════════════════════════════ */
     #collage {
       position: fixed;
       inset: 0;
       display: grid;
-      grid-template-columns: 24fr 19fr 29fr 28fr;
-      grid-template-rows: 40fr 32fr 28fr;
+      grid-template-columns: 22fr 24fr 26fr 28fr;
+      grid-template-rows:    42fr 30fr 28fr;
       gap: 0;
       will-change: filter, opacity;
     }
 
-    /* grid items */
+    /* grid cell base */
     .gi {
       overflow: hidden;
       position: relative;
     }
     .gi img {
-      width: 100%; height: 100%;
-      object-fit: cover;
-      object-position: center;
-      display: block;
+      width:100%; height:100%;
+      object-fit:cover;
+      object-position:center;
+      display:block;
     }
 
-    /* grid placements — fills every pixel */
-    .g1 { grid-column: 1;     grid-row: 1 / 3; }  /* tall portrait, left */
-    .g2 { grid-column: 2;     grid-row: 1;     }
-    .g3 { grid-column: 3 / 5; grid-row: 1;     }  /* wide, top right */
-    .g4 { grid-column: 2 / 4; grid-row: 2;     }  /* wide, middle */
-    .g5 { grid-column: 4;     grid-row: 2 / 4; }  /* tall portrait, right */
-    .g6 { grid-column: 1;     grid-row: 3;     }
-    .g7 { grid-column: 2;     grid-row: 3;     }
-    .g8 { grid-column: 3;     grid-row: 3;     }
+    /* grid placements */
+    .g1 { grid-column:1;     grid-row:1/3;   }   /* tall portrait, left side  */
+    .g2 { grid-column:2/5;   grid-row:1;     }   /* wide concert, top         */
+    .g3 { grid-column:4;     grid-row:2/4;   }   /* tall portrait, right side */
+    .g4 { grid-column:2;     grid-row:2;     }
+    .g5 { grid-column:3;     grid-row:2;     }
+    .g6 { grid-column:1/3;   grid-row:3;     }   /* wide landscape, btm left  */
+    .g7 { grid-column:3;     grid-row:3;     }
 
-    /* thin divider lines between cells — feels like a real collage */
-    .gi { outline: 2px solid rgba(255,255,255,.06); }
-
-    /* stickers ON photos */
-    .stk {
-      position: absolute;
-      font-family: 'Caveat', cursive;
-      font-weight: 700;
-      color: #fff;
-      pointer-events: none;
-      text-shadow: 0 2px 8px rgba(0,0,0,.5);
-      line-height: 1.15;
+    /* sticker labels ON photos (like Summer Nights text stickers) */
+    .lbl {
+      position:absolute;
+      font-family:'Caveat',cursive;
+      font-weight:700;
+      color:#fff;
+      text-shadow:0 2px 8px rgba(0,0,0,.55);
+      pointer-events:none;
+      line-height:1.15;
+    }
+    .lbl.box {
+      background:rgba(240,232,215,.92);
+      color:#1a1208;
+      text-shadow:none;
+      padding:6px 12px 8px;
     }
 
-    /* polaroid accent photos — float on top of grid */
+    /* ── floating polaroid accents on top ── */
     .acc {
-      position: fixed;
-      background: #fff;
-      padding: 6px 6px 20px;
-      box-shadow: 0 6px 24px rgba(0,0,0,.35);
-      z-index: 6;
-      overflow: hidden;
+      position:fixed;
+      background:#fff;
+      padding:5px 5px 18px;
+      box-shadow:0 6px 24px rgba(0,0,0,.38);
+      z-index:6;
+      overflow:hidden;
     }
     .acc img {
-      width: 100%; height: 100%;
-      object-fit: cover;
-      display: block;
+      width:100%;height:100%;
+      object-fit:cover;display:block;
     }
 
-    /* floating icons */
+    /* ── floating music / book icons ── */
     .fi {
-      position: fixed;
-      font-size: 20px;
-      pointer-events: none;
-      z-index: 7;
-      animation: flt 5s ease-in-out infinite;
-      text-shadow: 0 2px 6px rgba(0,0,0,.4);
+      position:fixed;font-size:20px;
+      pointer-events:none;z-index:7;
+      animation:flt 5s ease-in-out infinite;
+      filter:drop-shadow(0 2px 4px rgba(0,0,0,.4));
     }
     @keyframes flt {
-      0%,100%{ transform: translateY(0) rotate(0deg); }
-      50%    { transform: translateY(-9px) rotate(6deg); }
+      0%,100%{ transform:translateY(0) rotate(0deg); }
+      50%    { transform:translateY(-10px) rotate(7deg); }
     }
 
     /* ══ VEIL ══ */
     #veil {
-      position: fixed; inset: 0;
-      background: #0a0806;
-      opacity: 0; z-index: 10;
-      pointer-events: none;
-      will-change: opacity;
+      position:fixed;inset:0;
+      background:#0a0806;
+      opacity:0;z-index:10;
+      pointer-events:none;
+      will-change:opacity;
     }
 
     /* ══ NAME ══ */
     #nameWrap {
-      position: fixed;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -52%);
-      z-index: 11;
-      text-align: center;
-      pointer-events: none;
-      line-height: 0.88;
+      position:fixed;
+      top:50%;left:50%;
+      transform:translate(-50%,-52%);
+      z-index:11;text-align:center;
+      pointer-events:none;
+      line-height:0.86;
     }
-    .nline { display: block; overflow: hidden; }
+    .nline { display:block;overflow:hidden; }
     .nword {
-      display: inline-block;
-      font-family: 'Playfair Display', serif;
-      font-weight: 700;
-      font-size: clamp(78px, 13vw, 152px);
-      color: #f2e8d8;
-      letter-spacing: -3px;
-      transform: translateY(112%);
-      will-change: transform;
+      display:inline-block;
+      font-family:'Playfair Display',serif;
+      font-weight:700;
+      font-size:clamp(80px,14vw,160px);
+      color:#f2e8d8;
+      letter-spacing:-3px;
+      transform:translateY(112%);
+      will-change:transform;
     }
 
     /* ══ PHRASE ══ */
     #phrase {
-      position: fixed;
-      bottom: 10%; left: 50%;
-      transform: translateX(-50%) translateY(28px);
-      z-index: 11;
-      text-align: center;
-      opacity: 0;
-      pointer-events: none;
-      width: min(820px, 90vw);
-      will-change: opacity, transform;
+      position:fixed;
+      bottom:9%;left:50%;
+      transform:translateX(-50%) translateY(28px);
+      z-index:11;text-align:center;
+      opacity:0;pointer-events:none;
+      width:min(840px,90vw);
+      will-change:opacity,transform;
     }
     .ph-age {
-      font-size: 10px; font-weight: 600;
-      letter-spacing: 5px; text-transform: uppercase;
-      color: #c9a96e; margin-bottom: 18px;
+      font-size:10px;font-weight:600;
+      letter-spacing:5px;text-transform:uppercase;
+      color:#c9a96e;margin-bottom:20px;
     }
     .ph-text {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(24px, 3.8vw, 44px);
-      font-weight: 700; font-style: italic;
-      color: #f2e8d8; line-height: 1.38;
+      font-family:'Playfair Display',serif;
+      font-size:clamp(23px,3.7vw,44px);
+      font-weight:700;font-style:italic;
+      color:#f2e8d8;line-height:1.4;
     }
-    .ph-text span { color: #c9a96e; font-style: normal; }
+    .ph-text em { color:#c9a96e;font-style:normal; }
 
     /* ══ SCROLL HINT ══ */
     #hint {
-      position: fixed; bottom: 24px; left: 50%;
-      transform: translateX(-50%); z-index: 20;
-      display: flex; flex-direction: column;
-      align-items: center; gap: 8px;
+      position:fixed;bottom:22px;left:50%;
+      transform:translateX(-50%);z-index:20;
+      display:flex;flex-direction:column;align-items:center;gap:8px;
     }
-    #hint .ln { width:1px; height:36px; background:linear-gradient(to bottom,rgba(200,180,140,.7),transparent); animation:lp 2s ease-in-out infinite; }
-    #hint .tx { font-size:8px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:rgba(200,180,140,.5); }
+    #hint .ln { width:1px;height:36px;background:linear-gradient(to bottom,rgba(200,180,140,.7),transparent);animation:lp 2s ease-in-out infinite; }
+    #hint .tx { font-size:8px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:rgba(200,180,140,.45); }
     @keyframes lp { 0%,100%{opacity:.3}50%{opacity:1} }
   </style>
 </head>
@@ -171,70 +166,68 @@
 <div id="cur"></div>
 <div id="curR"></div>
 
-<!-- ══ COLLAGE (CSS grid — zero gaps) ══ -->
+<!-- ══ COLLAGE — Summer Nights layout with Riya's photos ══ -->
 <div id="collage">
 
-  <!-- g1: tall portrait left (rows 1-2) -->
+  <!-- g1: tall portrait, full left — like the dancing girl in Summer Nights -->
   <div class="gi g1">
-    <img src="images/IMG_1693.JPG" style="object-position:center 30%;"/>
-    <div class="stk" style="bottom:12px; left:14px; font-size:18px; transform:rotate(-3deg);">good times 🤍</div>
+    <img src="images/IMG_1693.JPG" style="object-position:center 25%;"/>
   </div>
 
-  <!-- g2: top centre-left -->
+  <!-- g2: wide top — like the park/swing landscape in Summer Nights -->
   <div class="gi g2">
-    <img src="images/IMG_2335.JPG"/>
-    <div class="stk" style="bottom:10px; left:10px; font-size:16px;">golden hour ✨</div>
+    <img src="images/ARIRANG TOUR.jpeg" style="object-position:center 35%;"/>
+    <div class="lbl box" style="bottom:16px;left:20px;font-size:22px;transform:rotate(-1deg);">k-pop is life. 🎵</div>
   </div>
 
-  <!-- g3: wide top right — concert -->
+  <!-- g3: tall portrait, full right — like the cat/reading girl column -->
   <div class="gi g3">
-    <img src="images/ARIRANG TOUR.jpeg" style="object-position:center 40%;"/>
-    <div class="stk" style="top:14px; left:18px; font-size:22px; transform:rotate(-2deg);">k-pop is life 🎵</div>
+    <img src="images/IMG_1954.jpg" style="object-position:center 18%;"/>
   </div>
 
-  <!-- g4: wide middle — fairy lights -->
+  <!-- g4: mid left — like the cat in Summer Nights -->
   <div class="gi g4">
-    <img src="images/IMG_1774.JPG" style="object-position:center 40%;"/>
-    <div class="stk" style="top:14px; left:14px; font-size:16px;">melbourne nights 🌙</div>
-  </div>
-
-  <!-- g5: tall portrait right (rows 2-3) -->
-  <div class="gi g5">
-    <img src="images/IMG_1954.jpg" style="object-position:center 20%;"/>
-  </div>
-
-  <!-- g6: bottom left — book & music -->
-  <div class="gi g6">
     <img src="images/reading with music _.jpeg"/>
-    <div class="stk" style="bottom:10px; left:10px; font-size:15px;">currently reading 📖</div>
+    <div class="lbl" style="bottom:12px;left:12px;font-size:16px;">currently reading 📖</div>
   </div>
 
-  <!-- g7: bottom centre — selfie -->
+  <!-- g5: mid centre — like the central reading girl -->
+  <div class="gi g5">
+    <img src="images/IMG_2095.JPG" style="object-position:center 55%;"/>
+    <div class="lbl" style="top:12px;right:12px;font-size:15px;">good times 🤍</div>
+  </div>
+
+  <!-- g6: wide landscape bottom left — like the waffles/food wide shot -->
+  <div class="gi g6">
+    <img src="images/IMG_1774.JPG" style="object-position:center 45%;"/>
+    <div class="lbl box" style="bottom:14px;left:16px;font-size:20px;transform:rotate(-1deg);">melbourne nights. 🌙</div>
+  </div>
+
+  <!-- g7: bottom right — like the pizza/memories shot -->
   <div class="gi g7">
-    <img src="images/IMG_2095.JPG" style="object-position:center 60%;"/>
-  </div>
-
-  <!-- g8: bottom centre-right — park -->
-  <div class="gi g8">
-    <img src="images/IMG_2337.JPG" style="object-position:center 30%;"/>
-    <div class="stk" style="bottom:10px; right:10px; font-size:15px;">take me everywhere ✈️</div>
+    <img src="images/IMG_2337.JPG" style="object-position:center 25%;"/>
+    <div class="lbl" style="bottom:12px;right:12px;font-size:15px;">take me there ✈️</div>
   </div>
 
 </div>
 
-<!-- polaroid accents floating over grid -->
-<div class="acc" style="top:28%; left:17%; width:15vw; height:20vh; transform:rotate(-6deg);">
+<!-- floating polaroid accents — like the extra photos scattered in Summer Nights -->
+<div class="acc" style="top:24%;left:18%;width:16vw;height:21vh;transform:rotate(-7deg);">
+  <img src="images/IMG_1910.JPG" style="object-position:center 15%;"/>
+</div>
+<div class="acc" style="bottom:20%;left:34%;width:14vw;height:19vh;transform:rotate(6deg);">
   <img src="images/IMG_1694.JPG"/>
 </div>
-<div class="acc" style="top:34%; right:22%; width:13vw; height:17vh; transform:rotate(5deg);">
-  <img src="images/IMG_1910.JPG" style="object-position:center 20%;"/>
+<div class="acc" style="top:6%;right:3%;width:13vw;height:16vh;transform:rotate(-5deg);">
+  <img src="images/IMG_2335.JPG"/>
 </div>
 
 <!-- floating icons -->
-<div class="fi" style="top:18%; left:22%; animation-delay:0s;">🎶</div>
-<div class="fi" style="bottom:30%; right:20%; animation-delay:1.4s; animation-duration:6.5s;">📚</div>
-<div class="fi" style="top:48%; left:10%; animation-delay:0.8s; animation-duration:7s; font-size:16px;">♪</div>
-<div class="fi" style="bottom:34%; left:42%; animation-delay:2s; font-size:15px;">✦</div>
+<div class="fi" style="top:17%;left:24%;animation-delay:0s;">🎶</div>
+<div class="fi" style="bottom:26%;right:18%;animation-delay:1.3s;animation-duration:6s;">📚</div>
+<div class="fi" style="top:48%;left:7%;animation-delay:0.7s;animation-duration:7s;font-size:15px;">♪</div>
+<div class="fi" style="bottom:38%;left:46%;animation-delay:2.1s;font-size:14px;">✦</div>
+<div class="fi" style="top:7%;left:56%;animation-delay:1.8s;animation-duration:5.5s;">🎧</div>
 
 <!-- veil -->
 <div id="veil"></div>
@@ -251,7 +244,7 @@
   <p class="ph-text">
     melbourne girl with a whole world<br/>
     on her vision board —<br/>
-    <span>somewhere between figuring it out<br/>and having it all planned</span>
+    <em>somewhere between figuring it out<br/>and having it all planned</em>
   </p>
 </div>
 
@@ -264,8 +257,8 @@
 <script>
   const cur=document.getElementById('cur'),curR=document.getElementById('curR');
   document.addEventListener('mousemove',e=>{
-    cur.style.left=e.clientX+'px'; cur.style.top=e.clientY+'px';
-    curR.style.left=e.clientX+'px'; curR.style.top=e.clientY+'px';
+    cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px';
+    curR.style.left=e.clientX+'px';curR.style.top=e.clientY+'px';
   });
 
   const collage=document.getElementById('collage');
@@ -287,7 +280,7 @@
   window.addEventListener('touchstart',e=>{ty0=e.touches[0].clientY;},{passive:true});
   window.addEventListener('touchmove',e=>{
     e.preventDefault();
-    const d=ty0-e.touches[0].clientY; ty0=e.touches[0].clientY;
+    const d=ty0-e.touches[0].clientY;ty0=e.touches[0].clientY;
     tY=Math.max(0,Math.min(MAX,tY+d*1.8));
   },{passive:false});
 

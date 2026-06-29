@@ -19,24 +19,26 @@
     #cur  { position:fixed;width:9px;height:9px;background:#fff;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:difference; }
     #curR { position:fixed;width:30px;height:30px;border:1px solid rgba(201,169,110,.5);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:left .08s,top .08s; }
 
-    /* ═══════════════════════════════════════
-       COLLAGE  —  exact Summer Nights layout
-       Irregular mosaic grid, zero gaps, no outlines
-    ═══════════════════════════════════════ */
+    /* ════════════════════════════════════════════
+       COLLAGE
+       5-column mosaic, Summer Nights structure:
+       - col1: full-height portrait (like dancing girl)
+       - col3: DOMINANT full-height centre (like reading girl)
+       - everything fills in around those two anchors
+    ════════════════════════════════════════════ */
     #collage {
-      position: fixed;
-      inset: 0;
-      display: grid;
-      grid-template-columns: 22fr 24fr 26fr 28fr;
-      grid-template-rows:    42fr 30fr 28fr;
-      gap: 0;
-      will-change: filter, opacity;
+      position:fixed;
+      inset:0;
+      display:grid;
+      grid-template-columns: 17fr 21fr 24fr 22fr 16fr;
+      grid-template-rows:    42fr 32fr 26fr;
+      gap:0;
+      will-change:filter,opacity;
     }
 
-    /* grid cell base */
     .gi {
-      overflow: hidden;
-      position: relative;
+      overflow:hidden;
+      position:relative;
     }
     .gi img {
       width:100%; height:100%;
@@ -45,16 +47,18 @@
       display:block;
     }
 
-    /* grid placements */
-    .g1 { grid-column:1;     grid-row:1/3;   }   /* tall portrait, left side  */
-    .g2 { grid-column:2/5;   grid-row:1;     }   /* wide concert, top         */
-    .g3 { grid-column:4;     grid-row:2/4;   }   /* tall portrait, right side */
-    .g4 { grid-column:2;     grid-row:2;     }
-    .g5 { grid-column:3;     grid-row:2;     }
-    .g6 { grid-column:1/3;   grid-row:3;     }   /* wide landscape, btm left  */
-    .g7 { grid-column:3;     grid-row:3;     }
+    /* ── grid placements ── */
+    .g1 { grid-column:1/2;  grid-row:1/3;  }   /* tall portrait LEFT, rows 1-2     */
+    .g2 { grid-column:2/3;  grid-row:1/2;  }   /* small top left-centre             */
+    .g3 { grid-column:3/4;  grid-row:1/4;  }   /* DOMINANT centre, full height      */
+    .g4 { grid-column:4/6;  grid-row:1/2;  }   /* wide landscape top right          */
+    .g5 { grid-column:2/3;  grid-row:2/3;  }   /* mid left-centre                   */
+    .g6 { grid-column:4/5;  grid-row:2/3;  }   /* mid right                         */
+    .g7 { grid-column:5/6;  grid-row:2/4;  }   /* portrait right, rows 2-3          */
+    .g8 { grid-column:1/3;  grid-row:3/4;  }   /* wide landscape bottom left        */
+    .g9 { grid-column:4/5;  grid-row:3/4;  }   /* small bottom right                */
 
-    /* sticker labels ON photos (like Summer Nights text stickers) */
+    /* ── stickers (Summer Nights / Fleurs d'Amour style) ── */
     .lbl {
       position:absolute;
       font-family:'Caveat',cursive;
@@ -62,16 +66,40 @@
       color:#fff;
       text-shadow:0 2px 8px rgba(0,0,0,.55);
       pointer-events:none;
-      line-height:1.15;
+      line-height:1.2;
+      z-index:2;
     }
+    /* cream box sticker — like "SUMMER NIGHTS." label */
     .lbl.box {
-      background:rgba(240,232,215,.92);
+      background:rgba(242,232,215,.93);
       color:#1a1208;
       text-shadow:none;
-      padding:6px 12px 8px;
+      padding:5px 12px 7px;
+    }
+    /* dark chip sticker — like "DISCOVER A NEW WORLD DOWN YOUR PHONE" */
+    .lbl.chip {
+      background:rgba(15,12,8,.82);
+      color:#f2e8d8;
+      text-shadow:none;
+      padding:5px 10px 6px;
+      font-size:13px;
+      letter-spacing:.5px;
+    }
+    /* "MEMORIES MAKE ME SMILE" plate style */
+    .lbl.plate {
+      background:#fff;
+      color:#1a1208;
+      text-shadow:none;
+      border:2px solid #1a1208;
+      padding:4px 10px 5px;
+      font-family:'DM Sans',sans-serif;
+      font-size:12px;
+      font-weight:700;
+      letter-spacing:2px;
+      text-transform:uppercase;
     }
 
-    /* ── floating polaroid accents on top ── */
+    /* ── polaroid accent photos (floating on top) ── */
     .acc {
       position:fixed;
       background:#fff;
@@ -80,12 +108,9 @@
       z-index:6;
       overflow:hidden;
     }
-    .acc img {
-      width:100%;height:100%;
-      object-fit:cover;display:block;
-    }
+    .acc img { width:100%;height:100%;object-fit:cover;display:block; }
 
-    /* ── floating music / book icons ── */
+    /* ── floating icons ── */
     .fi {
       position:fixed;font-size:20px;
       pointer-events:none;z-index:7;
@@ -166,68 +191,77 @@
 <div id="cur"></div>
 <div id="curR"></div>
 
-<!-- ══ COLLAGE — Summer Nights layout with Riya's photos ══ -->
+<!-- ══ COLLAGE ══ -->
 <div id="collage">
 
-  <!-- g1: tall portrait, full left -->
+  <!-- g1: full-height left — like the dancing girl in Summer Nights -->
   <div class="gi g1">
-    <img src="images/IMG_1693.JPG" style="object-position:center 10%;"/>
+    <img src="images/IMG_1693.JPG" style="object-position:center 12%;"/>
   </div>
 
-  <!-- g2: wide top strip — Melbourne park/street -->
+  <!-- g2: small top cell — like the vinyl record / swing area -->
   <div class="gi g2">
-    <img src="images/IMG_2026.JPG" style="object-position:center 35%;"/>
-    <div class="lbl box" style="bottom:16px;left:20px;font-size:22px;transform:rotate(-1deg);">melbourne days. ☀️</div>
+    <img src="images/IMG_2335.JPG" style="object-position:center 40%;"/>
+    <div class="lbl" style="bottom:10px;left:10px;font-size:15px;transform:rotate(-2deg);">golden hour ✨</div>
   </div>
 
-  <!-- g3: tall portrait, full right -->
+  <!-- g3: DOMINANT centre — like the reading girl, full height, all eyes go here -->
   <div class="gi g3">
-    <img src="images/IMG_1954.jpg" style="object-position:center 10%;"/>
+    <img src="images/IMG_2095.JPG" style="object-position:center 38%;"/>
   </div>
 
-  <!-- g4: mid left — book + music -->
+  <!-- g4: wide top right — like the park/swing landscape -->
   <div class="gi g4">
-    <img src="images/reading with music _.jpeg" style="object-position:center 30%;"/>
-    <div class="lbl" style="bottom:12px;left:12px;font-size:16px;">currently reading 📖</div>
+    <img src="images/ARIRANG TOUR.jpeg" style="object-position:center 50%;"/>
+    <div class="lbl box" style="bottom:14px;left:16px;font-size:20px;transform:rotate(-1deg);">k-pop is life. 🎵</div>
   </div>
 
-  <!-- g5: mid centre — Riya best portrait -->
+  <!-- g5: mid left-centre — like the cat / strawberries -->
   <div class="gi g5">
-    <img src="images/IMG_2095.JPG" style="object-position:center 40%;"/>
-    <div class="lbl" style="top:12px;right:12px;font-size:15px;">good times 🤍</div>
+    <img src="images/reading with music _.jpeg" style="object-position:center 35%;"/>
+    <div class="lbl chip" style="bottom:10px;left:10px;">currently reading 📖</div>
   </div>
 
-  <!-- g6: wide landscape bottom left — fairy lights -->
+  <!-- g6: mid right — like the hat girl -->
   <div class="gi g6">
+    <img src="images/IMG_2337.JPG" style="object-position:center 25%;"/>
+    <div class="lbl" style="top:10px;right:10px;font-size:14px;">take me there ✈️</div>
+  </div>
+
+  <!-- g7: portrait right, rows 2-3 — like Converse / memories shot -->
+  <div class="gi g7">
+    <img src="images/IMG_1954.jpg" style="object-position:center 12%;"/>
+    <div class="lbl plate" style="bottom:12px;left:50%;transform:translateX(-50%);white-space:nowrap;">GOOD TIMES</div>
+  </div>
+
+  <!-- g8: wide bottom left — like the waffles / food wide shot -->
+  <div class="gi g8">
     <img src="images/IMG_1774.JPG" style="object-position:center 55%;"/>
     <div class="lbl box" style="bottom:14px;left:16px;font-size:20px;transform:rotate(-1deg);">melbourne nights. 🌙</div>
   </div>
 
-  <!-- g7: bottom right — like the pizza/memories shot -->
-  <div class="gi g7">
-    <img src="images/IMG_2337.JPG" style="object-position:center 25%;"/>
-    <div class="lbl" style="bottom:12px;right:12px;font-size:15px;">take me there ✈️</div>
+  <!-- g9: small bottom right — like the pizza shot -->
+  <div class="gi g9">
+    <img src="images/IMG_2026.JPG" style="object-position:center 30%;"/>
+    <div class="lbl chip" style="bottom:10px;right:10px;">discover melbourne</div>
   </div>
 
 </div>
 
-<!-- floating polaroid accents — like the extra photos scattered in Summer Nights -->
-<div class="acc" style="top:24%;left:18%;width:16vw;height:21vh;transform:rotate(-7deg);">
-  <img src="images/IMG_1910.JPG" style="object-position:center 15%;"/>
+<!-- ── polaroid accents (Fleurs d'Amour scattered feel) ── -->
+<div class="acc" style="top:24%;left:16%;width:15vw;height:20vh;transform:rotate(-7deg);z-index:6;">
+  <img src="images/IMG_1910.JPG" style="object-position:center 12%;"/>
 </div>
-<div class="acc" style="bottom:20%;left:34%;width:14vw;height:19vh;transform:rotate(6deg);">
+<div class="acc" style="bottom:18%;left:32%;width:13vw;height:17vh;transform:rotate(6deg);z-index:6;">
   <img src="images/IMG_1694.JPG"/>
-</div>
-<div class="acc" style="top:6%;right:3%;width:13vw;height:16vh;transform:rotate(-5deg);">
-  <img src="images/IMG_2335.JPG"/>
 </div>
 
 <!-- floating icons -->
-<div class="fi" style="top:17%;left:24%;animation-delay:0s;">🎶</div>
-<div class="fi" style="bottom:26%;right:18%;animation-delay:1.3s;animation-duration:6s;">📚</div>
-<div class="fi" style="top:48%;left:7%;animation-delay:0.7s;animation-duration:7s;font-size:15px;">♪</div>
-<div class="fi" style="bottom:38%;left:46%;animation-delay:2.1s;font-size:14px;">✦</div>
-<div class="fi" style="top:7%;left:56%;animation-delay:1.8s;animation-duration:5.5s;">🎧</div>
+<div class="fi" style="top:16%;left:20%;animation-delay:0s;">🎶</div>
+<div class="fi" style="bottom:24%;right:16%;animation-delay:1.3s;animation-duration:6s;">📚</div>
+<div class="fi" style="top:52%;left:6%;animation-delay:0.7s;animation-duration:7s;font-size:14px;">♪</div>
+<div class="fi" style="top:8%;left:56%;animation-delay:1.9s;animation-duration:5.5s;">🎧</div>
+<div class="fi" style="bottom:32%;left:44%;animation-delay:2.2s;font-size:13px;">✦</div>
 
 <!-- veil -->
 <div id="veil"></div>

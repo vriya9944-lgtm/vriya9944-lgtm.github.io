@@ -4,188 +4,166 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Riya Virdi</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Caveat:wght@600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     html, body {
       width: 100%; height: 100%;
       overflow: hidden;
-      background: #f2ede5;
+      background: #111;
       font-family: 'DM Sans', sans-serif;
       cursor: none;
     }
 
-    /* CURSOR */
-    #cur  { position:fixed; width:9px; height:9px; background:#1a1208; border-radius:50%; pointer-events:none; z-index:9999; transform:translate(-50%,-50%); }
-    #curR { position:fixed; width:30px; height:30px; border:1.5px solid rgba(150,120,80,.5); border-radius:50%; pointer-events:none; z-index:9998; transform:translate(-50%,-50%); transition:left .09s,top .09s; }
+    #cur  { position:fixed; width:9px; height:9px; background:#fff; border-radius:50%; pointer-events:none; z-index:9999; transform:translate(-50%,-50%); mix-blend-mode:difference; }
+    #curR { position:fixed; width:30px; height:30px; border:1px solid rgba(201,169,110,.6); border-radius:50%; pointer-events:none; z-index:9998; transform:translate(-50%,-50%); transition:left .08s,top .08s; }
 
-    /* ── COLLAGE ── */
+    /* ══ COLLAGE ══ */
     #collage {
       position: fixed;
       inset: 0;
+      overflow: hidden;
       will-change: filter, opacity;
     }
 
-    .photo {
+    .p {
       position: absolute;
-      background: #fff;
-      padding: 7px 7px 22px 7px;
-      box-shadow: 0 6px 28px rgba(0,0,0,.13), 0 1px 4px rgba(0,0,0,.08);
-      will-change: transform;
-      transition: box-shadow .3s;
+      overflow: hidden;
     }
-
-    .photo img {
-      display: block;
-      width: 100%;
-      height: 100%;
+    .p img {
+      width: 100%; height: 100%;
       object-fit: cover;
-      object-position: center top;
+      object-position: center;
+      display: block;
     }
 
-    /* scattered positions */
-    .ph1 { width:19vw; height:30vh; top:3%;   left:1%;   transform:rotate(-4deg); z-index:3; }
-    .ph2 { width:22vw; height:24vh; top:2%;   left:20%;  transform:rotate(2deg);  z-index:2; }
-    .ph3 { width:20vw; height:26vh; top:1%;   left:42%;  transform:rotate(-2deg); z-index:4; }
-    .ph4 { width:18vw; height:28vh; top:5%;   left:63%;  transform:rotate(3deg);  z-index:2; }
-    .ph5 { width:16vw; height:24vh; top:3%;   right:1%;  transform:rotate(-3deg); z-index:3; }
-    .ph6 { width:24vw; height:34vh; top:34%;  left:3%;   transform:rotate(3deg);  z-index:5; }
-    .ph7 { width:20vw; height:28vh; top:30%;  left:28%;  transform:rotate(-3deg); z-index:3; }
-    .ph8 { width:22vw; height:30vh; top:28%;  right:22%; transform:rotate(2deg);  z-index:4; }
-    .ph9 { width:18vw; height:26vh; top:32%;  right:1%;  transform:rotate(-4deg); z-index:2; }
-    .ph10{ width:20vw; height:24vh; bottom:2%;left:5%;   transform:rotate(-2deg); z-index:3; }
-    .ph11{ width:22vw; height:26vh; bottom:1%;left:27%;  transform:rotate(3deg);  z-index:4; }
-    .ph12{ width:20vw; height:28vh; bottom:3%;left:50%;  transform:rotate(-3deg); z-index:3; }
-    .ph13{ width:18vw; height:24vh; bottom:2%;right:4%;  transform:rotate(2deg);  z-index:2; }
+    /* polaroid on select photos */
+    .pol {
+      background: #fff;
+      padding: 5px 5px 18px;
+      box-shadow: 0 4px 18px rgba(0,0,0,.22);
+    }
+    .p:not(.pol) {
+      box-shadow: 0 3px 14px rgba(0,0,0,.28);
+    }
 
-    /* scrapbook text stickers */
-    .sticker {
+    /* ── 11 photos — fully covering screen, overlapping ── */
+    /* ROW 1 (top) */
+    .p1  { width:48vw; height:44vh; top:-4vh;  left:-4vw;  transform:rotate(-3deg); z-index:2; }
+    .p2  { width:34vw; height:54vh; top:-5vh;  left:38vw;  transform:rotate(2deg);  z-index:4; }
+    .p3  { width:36vw; height:46vh; top:-3vh;  right:-4vw; transform:rotate(-2deg); z-index:2; }
+
+    /* ROW 2 (middle) */
+    .p4  { width:40vw; height:54vh; top:28vh;  left:-5vw;  transform:rotate(3deg);  z-index:3; }
+    .p5  { width:46vw; height:52vh; top:26vh;  left:26vw;  transform:rotate(-2deg); z-index:5; }
+    .p6  { width:36vw; height:54vh; top:24vh;  right:-5vw; transform:rotate(2deg);  z-index:3; }
+
+    /* ROW 3 (bottom) */
+    .p7  { width:44vw; height:46vh; bottom:-5vh; left:-4vw;  transform:rotate(-2deg); z-index:2; }
+    .p8  { width:38vw; height:48vh; bottom:-4vh; left:30vw;  transform:rotate(3deg);  z-index:4; }
+    .p9  { width:34vw; height:44vh; bottom:-4vh; right:-4vw; transform:rotate(-3deg); z-index:2; }
+
+    /* ACCENT — float on top */
+    .p10 { width:30vw; height:38vh; top:16vh;  left:14vw;  transform:rotate(-5deg); z-index:7; }
+    .p11 { width:26vw; height:34vh; top:20vh;  right:16vw; transform:rotate(4deg);  z-index:7; }
+
+    /* ── HANDWRITTEN STICKERS ── */
+    .stk {
       position: absolute;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      color: #6a5a4a;
-      pointer-events: none;
-      z-index: 6;
-    }
-    .sticker.big {
-      font-family: 'Playfair Display', serif;
-      font-size: 22px;
-      font-style: italic;
-      letter-spacing: 0;
-      text-transform: none;
-      color: #3a2e1e;
-      font-weight: 700;
-    }
-
-    /* floating music/reading icons */
-    .ficon {
-      position: absolute;
+      font-family: 'Caveat', cursive;
       font-size: 20px;
+      font-weight: 600;
+      color: #1a1208;
       pointer-events: none;
-      z-index: 7;
+      z-index: 9;
+      line-height: 1.2;
+    }
+    .stk.light { color: #f5ede0; }
+    .stk.sm { font-size: 15px; letter-spacing: 1px; font-family: 'DM Sans'; font-weight:500; text-transform:uppercase; }
+
+    /* ── FLOATING MUSIC / BOOK ICONS ── */
+    .fi {
+      position: absolute;
+      font-size: 22px;
+      pointer-events: none;
+      z-index: 9;
       animation: flt 5s ease-in-out infinite;
     }
     @keyframes flt {
-      0%,100% { transform: translateY(0) rotate(0deg); }
-      50%      { transform: translateY(-8px) rotate(5deg); }
+      0%,100%{transform:translateY(0) rotate(0deg);}
+      50%{transform:translateY(-9px) rotate(6deg);}
     }
 
-    /* ── DARK OVERLAY on scroll ── */
+    /* ══ VEIL ══ */
     #veil {
-      position: fixed;
-      inset: 0;
-      background: #0e0b07;
+      position: fixed; inset: 0;
+      background: #0a0806;
       opacity: 0;
-      z-index: 8;
+      z-index: 10;
       pointer-events: none;
       will-change: opacity;
     }
 
-    /* ── NAME ── */
+    /* ══ NAME ══ */
     #nameWrap {
       position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 9;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -52%);
+      z-index: 11;
       text-align: center;
       pointer-events: none;
-      line-height: 0.9;
+      line-height: 0.88;
     }
-
-    .name-line {
-      display: block;
-      overflow: hidden;
-    }
-
-    .name-word {
+    .nline { display: block; overflow: hidden; }
+    .nword {
       display: inline-block;
       font-family: 'Playfair Display', serif;
       font-weight: 700;
-      font-size: clamp(80px, 14vw, 170px);
-      color: #f5ede0;
+      font-size: clamp(80px, 13vw, 155px);
+      color: #f2e8d8;
       letter-spacing: -3px;
-      transform: translateY(110%);
+      transform: translateY(112%);
       will-change: transform;
     }
 
-    /* ── PHRASE ── */
+    /* ══ PHRASE ══ */
     #phrase {
       position: fixed;
-      bottom: 12%;
-      left: 50%;
-      transform: translateX(-50%) translateY(30px);
-      z-index: 9;
+      bottom: 10%; left: 50%;
+      transform: translateX(-50%) translateY(28px);
+      z-index: 11;
       text-align: center;
-      pointer-events: none;
       opacity: 0;
-      will-change: opacity, transform;
+      pointer-events: none;
       width: min(820px, 90vw);
+      will-change: opacity, transform;
     }
-
-    .phrase-age {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 5px;
-      text-transform: uppercase;
-      color: #c9a96e;
-      margin-bottom: 20px;
+    .ph-age {
+      font-size: 10px; font-weight:600;
+      letter-spacing: 5px; text-transform:uppercase;
+      color: #c9a96e; margin-bottom: 18px;
     }
-
-    .phrase-text {
+    .ph-text {
       font-family: 'Playfair Display', serif;
-      font-size: clamp(22px, 3.5vw, 42px);
+      font-size: clamp(24px, 3.8vw, 44px);
       font-weight: 700;
       font-style: italic;
-      color: #f5ede0;
-      line-height: 1.4;
+      color: #f2e8d8;
+      line-height: 1.38;
     }
+    .ph-text span { color: #c9a96e; font-style:normal; }
 
-    .phrase-text em {
-      font-style: normal;
-      color: #c9a96e;
-    }
-
-    /* ── SCROLL HINT ── */
+    /* ══ SCROLL HINT ══ */
     #hint {
-      position: fixed;
-      bottom: 26px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 20;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      will-change: opacity;
+      position:fixed; bottom:24px; left:50%;
+      transform:translateX(-50%); z-index:20;
+      display:flex; flex-direction:column;
+      align-items:center; gap:8px;
     }
-    #hint .ln { width:1px; height:36px; background:linear-gradient(to bottom,#a09080,transparent); animation:lp 2s ease-in-out infinite; }
-    #hint .tx { font-size:8px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:#a09080; }
-    @keyframes lp { 0%,100%{opacity:.3} 50%{opacity:1} }
+    #hint .ln { width:1px; height:36px; background:linear-gradient(to bottom,rgba(200,180,140,.7),transparent); animation:lp 2s ease-in-out infinite; }
+    #hint .tx { font-size:8px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:rgba(200,180,140,.5); }
+    @keyframes lp { 0%,100%{opacity:.3}50%{opacity:1} }
   </style>
 </head>
 <body>
@@ -193,128 +171,119 @@
 <div id="cur"></div>
 <div id="curR"></div>
 
-<!-- ── COLLAGE ── -->
+<!-- ══ COLLAGE ══ -->
 <div id="collage">
 
-  <!-- photos -->
-  <div class="photo ph1"><img src="images/IMG_2095.JPG"/></div>
-  <div class="photo ph2"><img src="images/IMG_2335.JPG"/></div>
-  <div class="photo ph3"><img src="images/ARIRANG TOUR.jpeg"/></div>
-  <div class="photo ph4"><img src="images/IMG_1693.JPG"/></div>
-  <div class="photo ph5"><img src="images/reading with music _.jpeg"/></div>
-  <div class="photo ph6"><img src="images/IMG_1774.JPG"/></div>
-  <div class="photo ph7"><img src="images/IMG_2337.JPG"/></div>
-  <div class="photo ph8"><img src="images/IMG_1694.JPG"/></div>
-  <div class="photo ph9"><img src="images/IMG_1954.jpg"/></div>
-  <div class="photo ph10"><img src="images/IMG_1910.JPG"/></div>
-  <div class="photo ph11"><img src="images/IMG_2026.JPG"/></div>
-  <div class="photo ph12"><img src="images/IMG_0636.JPG"/></div>
-  <div class="photo ph13"><img src="images/IMG_0358.JPG"/></div>
+  <!-- 9 base photos — full screen coverage -->
+  <div class="p p1"><img src="images/IMG_2335.JPG"/></div>
+  <div class="p p2 pol"><img src="images/IMG_2095.JPG"/></div>
+  <div class="p p3"><img src="images/ARIRANG TOUR.jpeg"/></div>
+  <div class="p p4"><img src="images/IMG_1693.JPG"/></div>
+  <div class="p p5"><img src="images/reading with music _.jpeg"/></div>
+  <div class="p p6 pol"><img src="images/IMG_1694.JPG"/></div>
+  <div class="p p7"><img src="images/IMG_1774.JPG"/></div>
+  <div class="p p8"><img src="images/IMG_2026.JPG"/></div>
+  <div class="p p9 pol"><img src="images/IMG_1954.jpg"/></div>
 
-  <!-- scrapbook text stickers -->
-  <div class="sticker big" style="top:38%; left:27%; transform:rotate(-6deg);">take me<br/>everywhere</div>
-  <div class="sticker" style="bottom:32%; right:20%; transform:rotate(4deg);">✦ currently reading</div>
-  <div class="sticker" style="top:62%; left:50%; transform:rotate(-3deg);">now playing 🎵</div>
-  <div class="sticker" style="top:14%; left:45%; transform:rotate(2deg); font-size:13px;">melbourne days</div>
+  <!-- 2 accent photos on top -->
+  <div class="p p10 pol"><img src="images/IMG_1910.JPG"/></div>
+  <div class="p p11"><img src="images/IMG_2337.JPG"/></div>
+
+  <!-- handwritten stickers -->
+  <div class="stk" style="top:8%;  left:4%;  transform:rotate(-6deg);">take me<br/>everywhere ✈</div>
+  <div class="stk" style="top:60%; left:5%;  transform:rotate(4deg); font-size:17px;">now playing 🎵</div>
+  <div class="stk" style="bottom:8%; left:48%; transform:rotate(-3deg); font-size:17px;">currently reading 📖</div>
+  <div class="stk light" style="top:5%; right:7%; transform:rotate(3deg); font-size:16px;">✦ melbourne days</div>
+  <div class="stk" style="bottom:14%; right:6%; transform:rotate(-4deg); font-size:22px;">good times 🤍</div>
 
   <!-- floating icons -->
-  <div class="ficon" style="top:20%; left:23%; animation-delay:0s;">🎵</div>
-  <div class="ficon" style="top:52%; right:18%; animation-delay:1s; animation-duration:6s;">📖</div>
-  <div class="ficon" style="bottom:28%; left:22%; animation-delay:2s; animation-duration:7s;">🎶</div>
-  <div class="ficon" style="top:72%; right:28%; animation-delay:0.5s;">📚</div>
-  <div class="ficon" style="top:8%; right:22%; animation-delay:1.5s; animation-duration:8s;">🎧</div>
-  <div class="ficon" style="bottom:20%; left:48%; animation-delay:3s; font-size:14px;">✦</div>
+  <div class="fi" style="top:32%; left:9%;  animation-delay:0s;">🎶</div>
+  <div class="fi" style="top:68%; right:9%; animation-delay:1.2s; animation-duration:6s;">📚</div>
+  <div class="fi" style="top:12%; left:52%; animation-delay:2s; animation-duration:7s; font-size:16px;">✦</div>
+  <div class="fi" style="bottom:22%;left:28%;animation-delay:0.6s;">🎧</div>
 
 </div>
 
-<!-- dark veil -->
+<!-- veil -->
 <div id="veil"></div>
 
-<!-- NAME -->
+<!-- name -->
 <div id="nameWrap">
-  <span class="name-line"><span class="name-word" id="wRiya">Riya</span></span>
-  <span class="name-line"><span class="name-word" id="wVirdi">Virdi</span></span>
+  <span class="nline"><span class="nword" id="wR">Riya</span></span>
+  <span class="nline"><span class="nword" id="wV">Virdi</span></span>
 </div>
 
-<!-- CATCHY PHRASE -->
+<!-- phrase -->
 <div id="phrase">
-  <div class="phrase-age">19 &nbsp;·&nbsp; Melbourne, Australia</div>
-  <p class="phrase-text">
+  <div class="ph-age">19 &nbsp;·&nbsp; Melbourne, Australia</div>
+  <p class="ph-text">
     melbourne girl with a whole world<br/>
     on her vision board —<br/>
-    <em>somewhere between figuring it out<br/>and having it all planned</em>
+    <span>somewhere between figuring it out<br/>and having it all planned</span>
   </p>
 </div>
 
-<!-- SCROLL HINT -->
+<!-- hint -->
 <div id="hint">
   <div class="ln"></div>
   <div class="tx">scroll</div>
 </div>
 
 <script>
-  /* cursor */
-  const cur=document.getElementById('cur'), curR=document.getElementById('curR');
+  const cur=document.getElementById('cur'),curR=document.getElementById('curR');
   document.addEventListener('mousemove',e=>{
     cur.style.left=e.clientX+'px'; cur.style.top=e.clientY+'px';
     curR.style.left=e.clientX+'px'; curR.style.top=e.clientY+'px';
   });
 
-  const collage = document.getElementById('collage');
-  const veil    = document.getElementById('veil');
-  const wRiya   = document.getElementById('wRiya');
-  const wVirdi  = document.getElementById('wVirdi');
-  const phrase  = document.getElementById('phrase');
-  const hint    = document.getElementById('hint');
+  const collage=document.getElementById('collage');
+  const veil=document.getElementById('veil');
+  const wR=document.getElementById('wR');
+  const wV=document.getElementById('wV');
+  const phrase=document.getElementById('phrase');
+  const hint=document.getElementById('hint');
 
-  let targetY=0, curY=0;
-  const MAX = window.innerHeight * 2.3;
+  let tY=0,cY=0;
+  const MAX=window.innerHeight*2.2;
 
-  window.addEventListener('wheel', e=>{
+  window.addEventListener('wheel',e=>{
     e.preventDefault();
-    targetY = Math.max(0, Math.min(MAX, targetY + e.deltaY * 0.88));
-  }, {passive:false});
+    tY=Math.max(0,Math.min(MAX,tY+e.deltaY*.88));
+  },{passive:false});
 
   let ty0=0;
   window.addEventListener('touchstart',e=>{ty0=e.touches[0].clientY;},{passive:true});
   window.addEventListener('touchmove',e=>{
     e.preventDefault();
     const d=ty0-e.touches[0].clientY; ty0=e.touches[0].clientY;
-    targetY=Math.max(0,Math.min(MAX,targetY+d*1.8));
+    tY=Math.max(0,Math.min(MAX,tY+d*1.8));
   },{passive:false});
 
-  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
-  const lerp=(a,b,t)=>a+(b-a)*t;
-  const ease=t=>t<.5?2*t*t:-1+(4-2*t)*t;
-  const prog=(y,s,e)=>clamp((y-s)/(e-s),0,1);
+  const cl=(v,a,b)=>Math.max(a,Math.min(b,v));
+  const lr=(a,b,t)=>a+(b-a)*t;
+  const eo=t=>1-Math.pow(1-t,3);
+  const pg=(y,s,e)=>cl((y-s)/(e-s),0,1);
 
   function tick(){
-    curY = lerp(curY, targetY, 0.072);
-    const y=curY, vh=window.innerHeight;
+    cY=lr(cY,tY,.072);
+    const y=cY,vh=window.innerHeight;
 
-    /* collage: blur + fade out */
-    const colP = ease(prog(y, vh*.15, vh*1.0));
-    collage.style.filter  = `blur(${(colP*20).toFixed(1)}px)`;
-    collage.style.opacity = (1 - colP*.6).toFixed(3);
+    const cP=eo(pg(y,vh*.12,vh*.95));
+    collage.style.filter=`blur(${(cP*22).toFixed(1)}px)`;
+    collage.style.opacity=(1-cP*.55).toFixed(3);
+    veil.style.opacity=(cP*.9).toFixed(3);
 
-    /* veil darkens */
-    veil.style.opacity = (colP * .88).toFixed(3);
+    const rP=eo(pg(y,vh*.32,vh*.75));
+    wR.style.transform=`translateY(${((1-rP)*112).toFixed(1)}%)`;
 
-    /* RIYA slides up (35%–78% of first screen) */
-    const rP = ease(prog(y, vh*.35, vh*.78));
-    wRiya.style.transform = `translateY(${((1-rP)*110).toFixed(1)}%)`;
+    const vP=eo(pg(y,vh*.48,vh*.9));
+    wV.style.transform=`translateY(${((1-vP)*112).toFixed(1)}%)`;
 
-    /* VIRDI slides up (50%–90%) */
-    const vP = ease(prog(y, vh*.50, vh*.92));
-    wVirdi.style.transform = `translateY(${((1-vP)*110).toFixed(1)}%)`;
+    const pP=eo(pg(y,vh*1.15,vh*1.65));
+    phrase.style.opacity=pP.toFixed(3);
+    phrase.style.transform=`translateX(-50%) translateY(${((1-pP)*26).toFixed(1)}px)`;
 
-    /* phrase fades in big (120%–170%) */
-    const pP = ease(prog(y, vh*1.2, vh*1.7));
-    phrase.style.opacity   = pP.toFixed(3);
-    phrase.style.transform = `translateX(-50%) translateY(${((1-pP)*28).toFixed(1)}px)`;
-
-    /* hint fades */
-    hint.style.opacity = (1-prog(y,0,vh*.22)).toFixed(3);
+    hint.style.opacity=(1-pg(y,0,vh*.2)).toFixed(3);
 
     requestAnimationFrame(tick);
   }

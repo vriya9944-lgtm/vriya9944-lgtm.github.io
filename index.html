@@ -146,7 +146,7 @@
 
     #lottie-plane {
       position:fixed;
-      width:520px; height:520px;
+      width:780px; height:780px;
       pointer-events:none; z-index:9;
       opacity:0; transition:opacity .4s ease;
     }
@@ -196,9 +196,8 @@
   <svg id="flight-svg" xmlns="http://www.w3.org/2000/svg"
        viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice">
     <path id="flight-path"
-      d="M 55,760 C 200,760 550,600 550,400 A 150,150 0 0,0 850,400 A 150,150 0 0,0 550,400 C 550,200 1200,50 1385,50"
-      fill="none" stroke="#FF1493" stroke-width="6"
-      stroke-dasharray="72 22" stroke-linecap="butt" opacity="0"/>
+      d="M 55,760 C 400,760 1050,50 1385,50"
+      fill="none" stroke="none" opacity="0"/>
   </svg>
 
   <div id="lottie-plane">
@@ -369,7 +368,6 @@
     });
     setTimeout(() => {
       portfolio.classList.remove('visible');
-      flightPath.style.transition = ''; flightPath.style.opacity = '0';
       lottiePlane.style.opacity = '0';
       lottiePlane.style.transform = '';
       flightSvg.style.opacity = '1';
@@ -396,8 +394,6 @@
   function startPlaneAnim() {
     const totalLen = flightPath.getTotalLength();
     animActive = true;
-    flightPath.style.transition = 'opacity .6s';
-    flightPath.style.opacity    = '0.6';
 
     setTimeout(() => {
       if (!animActive) return;

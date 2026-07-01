@@ -43,6 +43,14 @@
     }
     @keyframes pulse-ring { 0%,100%{transform:scale(1);opacity:.4} 50%{transform:scale(1.04);opacity:.9} }
 
+    #welcome {
+      font-family:'Caveat',cursive;
+      font-size:clamp(20px,3vw,36px);
+      font-weight:700;
+      color:rgba(255,255,255,.55);
+      text-align:center;
+    }
+
     #phrase {
       font-family:'Caveat',cursive;
       font-size:clamp(40px,8vw,100px);
@@ -93,35 +101,16 @@
 
     #cat-overlay { position:absolute; inset:0; z-index:3; cursor:none; }
 
-    /* SVG green-key filter makes pure green (R≈0, B≈0) pixels transparent
-       so the black #cat-wrap background shows through instead of the green screen */
     #yt {
       position:absolute;
       width:100%; height:100%;
       top:0; left:0;
       border:none;
-      filter:url(#rmgreen);
       pointer-events:none;
     }
   </style>
 </head>
 <body>
-
-<!-- Green-screen key: alpha = clamp(4*R + 4*B - 0.5, 0, 1)
-     Pure chroma-green (R=0,B=0) → alpha 0 (transparent → black bg shows)
-     Cat fur / any non-green colour → alpha 1 (fully opaque) -->
-<svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
-  <defs>
-    <filter id="rmgreen" color-interpolation-filters="sRGB">
-      <feColorMatrix type="matrix" values="
-        1  0  0  0  0
-        0  1  0  0  0
-        0  0  1  0  0
-        4  0  4  0 -0.5
-      "/>
-    </filter>
-  </defs>
-</svg>
 
 <div id="cur"></div>
 
@@ -129,6 +118,7 @@
 <div id="landing">
   <div class="ring" style="width:min(55vw,380px);height:min(55vw,380px);"></div>
   <div class="ring" style="width:min(75vw,520px);height:min(75vw,520px);animation-delay:.9s;animation-duration:3.5s;"></div>
+  <p id="welcome">hi welcome!</p>
   <div id="phrase"></div>
   <p id="hint">click anywhere</p>
 </div>
@@ -141,7 +131,6 @@
   </div>
 </div>
 
-<script src="https://www.youtube.com/iframe_api"></script>
 <script>
   /* cursor */
   const cur = document.getElementById('cur');
@@ -184,53 +173,26 @@
     }
   }
 
-  /* YouTube player */
-  let player, loopCount = 0, danceStarted = false;
+  /* YouTube video — set src directly on click so autoplay+audio is allowed
+     within the browser's user-gesture window */
+  const YT_SRC = 'https://www.youtube.com/embed/hrQzECgGiP0' +
+    '?autoplay=1&controls=0&rel=0&playsinline=1' +
+    '&disablekb=1&fs=0&iv_load_policy=3&modestbranding=1&mute=0';
 
-  function onYouTubeIframeAPIReady() {
-    player = new YT.Player('yt', {
-      videoId: 'hrQzECgGiP0',
-      playerVars: {
-        autoplay:0, controls:0, loop:0,
-        modestbranding:1, rel:0, playsinline:1,
-        disablekb:1, fs:0, iv_load_policy:3, cc_load_policy:0
-      },
-      events: {
-        onReady(e) {
-          // fires if API loaded after user already clicked
-          if (danceStarted) { loopCount = 0; e.target.playVideo(); }
-        },
-        onStateChange(e) {
-          if (e.data === YT.PlayerState.ENDED) {
-            loopCount++;
-            if (loopCount < 2) player.playVideo(); // loop twice then stop
-          }
-        }
-      }
-    });
-  }
+  const ytEl  = document.getElementById('yt');
+  const dance = document.getElementById('dance');
 
   /* click cat → replay */
   document.getElementById('cat-overlay').addEventListener('click', () => {
-    if (!player) return;
-    loopCount = 0;
-    player.seekTo(0);
-    player.playVideo();
+    ytEl.src = YT_SRC;
   });
 
   /* landing click */
-  const dance = document.getElementById('dance');
   let clicked = false;
   landing.addEventListener('click', e => {
     if (clicked) return; clicked = true;
-    danceStarted = true;
 
-    // playVideo() called synchronously inside the click handler so the
-    // browser's user-activation window is still open → audio is allowed
-    if (player && typeof player.playVideo === 'function') {
-      loopCount = 0;
-      player.playVideo();
-    }
+    ytEl.src = YT_SRC; // ← synchronous, inside gesture window → audio allowed
 
     burst(e.clientX, e.clientY);
     setTimeout(() => {

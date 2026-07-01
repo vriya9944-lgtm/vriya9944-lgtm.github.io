@@ -15,7 +15,6 @@
       cursor:none;
     }
 
-    /* custom cursor */
     #cur {
       position:fixed; z-index:9999;
       width:12px; height:12px;
@@ -23,9 +22,7 @@
       pointer-events:none;
       transform:translate(-50%,-50%);
       mix-blend-mode:difference;
-      transition:width .15s, height .15s;
     }
-    body:hover #cur { width:12px; height:12px; }
 
     /* ═══════════════════════
        SCREEN 1 — LANDING
@@ -44,12 +41,10 @@
       pointer-events:none;
     }
 
-    /* floating tiny stars */
     .star {
       position:absolute;
       width:3px; height:3px;
-      background:#fff;
-      border-radius:50%;
+      background:#fff; border-radius:50%;
       opacity:0;
       animation:twinkle var(--d,3s) ease-in-out infinite var(--delay,0s);
     }
@@ -58,34 +53,26 @@
       50%    { opacity:.6; transform:scale(1.4); }
     }
 
-    /* phrase */
     #phrase {
       font-family:'Caveat',cursive;
-      font-size:clamp(36px,7vw,90px);
+      font-size:clamp(38px,7vw,90px);
       font-weight:700;
       color:#fff;
       text-align:center;
-      line-height:1.15;
+      line-height:1.2;
       letter-spacing:-1px;
       padding:0 24px;
       cursor:none;
       user-select:none;
-      position:relative;
     }
 
-    /* each word gets a hover wiggle */
     .word {
       display:inline-block;
       transition:transform .18s cubic-bezier(.34,1.56,.64,1), color .18s;
-      position:relative;
     }
-    .word:hover {
-      transform:rotate(-4deg) scale(1.08);
-      color:#ffda79;
-    }
-    .word:nth-child(even):hover { transform:rotate(4deg) scale(1.08); }
+    .word:hover { transform:rotate(-4deg) scale(1.1); color:#ffda79; }
+    .word:nth-child(even):hover { transform:rotate(4deg) scale(1.1); }
 
-    /* subtle pulse ring behind phrase */
     #ring {
       position:absolute;
       width:min(60vw,400px); height:min(60vw,400px);
@@ -113,7 +100,7 @@
       font-size:12px;
       letter-spacing:3px;
       text-transform:uppercase;
-      color:rgba(255,255,255,.3);
+      color:rgba(255,255,255,.35);
       animation:fade-hint 2s ease-in-out infinite;
     }
     @keyframes fade-hint { 0%,100%{opacity:.3} 50%{opacity:.7} }
@@ -130,11 +117,8 @@
       clip-path:circle(0% at 50% 50%);
       transition:clip-path .7s cubic-bezier(.4,0,.2,1);
     }
-    #dance.open {
-      clip-path:circle(150% at 50% 50%);
-    }
+    #dance.open { clip-path:circle(150% at 50% 50%); }
 
-    /* glow behind cat */
     .glow {
       position:absolute;
       width:420px; height:420px;
@@ -149,50 +133,54 @@
       50%    { transform:scale(1.12); opacity:1; }
     }
 
-    /* dancing cat */
     #cat {
       position:relative; z-index:2;
-      height:clamp(240px,45vh,480px);
+      height:clamp(240px,46vh,500px);
       width:auto;
-      animation:cat-bounce .6s ease-in-out infinite alternate;
-      border-radius:4px;
+      animation:cat-bounce .55s ease-in-out infinite alternate;
     }
     @keyframes cat-bounce {
       from{ transform:translateY(0) scale(1); }
-      to  { transform:translateY(-12px) scale(1.02); }
+      to  { transform:translateY(-14px) scale(1.02); }
     }
 
-    /* top & bottom text */
     .dance-label {
       font-family:'Caveat',cursive;
       font-size:clamp(24px,4vw,52px);
       font-weight:700;
       color:#fff;
       text-align:center;
-      letter-spacing:-0.5px;
       position:relative; z-index:2;
       animation:label-in .6s cubic-bezier(.34,1.56,.64,1) both;
     }
-    .dance-label.top { margin-bottom:24px; animation-delay:.3s; }
-    .dance-label.bot { margin-top:24px; animation-delay:.5s; color:#ffda79; }
+    .dance-label.top { margin-bottom:22px; animation-delay:.3s; }
+    .dance-label.bot { margin-top:22px; animation-delay:.5s; color:#ffda79; }
     @keyframes label-in {
       from{ opacity:0; transform:translateY(20px); }
       to  { opacity:1; transform:translateY(0); }
     }
 
-    /* floating music notes */
     .note {
       position:absolute;
       font-size:28px;
       pointer-events:none;
       z-index:3;
       animation:note-float var(--nd,4s) ease-in-out infinite var(--ndelay,0s);
-      opacity:.8;
     }
     @keyframes note-float {
-      0%  { transform:translateY(0)   rotate(0deg);   opacity:.5; }
-      50% { transform:translateY(-30px) rotate(15deg); opacity:1;  }
-      100%{ transform:translateY(0)   rotate(0deg);   opacity:.5; }
+      0%  { transform:translateY(0) rotate(0deg); opacity:.5; }
+      50% { transform:translateY(-32px) rotate(15deg); opacity:1; }
+      100%{ transform:translateY(0) rotate(0deg); opacity:.5; }
+    }
+
+    /* hidden music iframe */
+    #music {
+      position:absolute;
+      width:1px; height:1px;
+      top:-999px; left:-999px;
+      opacity:.01;
+      pointer-events:none;
+      border:none;
     }
   </style>
 </head>
@@ -200,7 +188,7 @@
 
 <div id="cur"></div>
 
-<!-- ══ SCREEN 1: LANDING ══ -->
+<!-- SCREEN 1 -->
 <div id="landing">
   <div id="ring"></div>
   <div id="ring2"></div>
@@ -208,27 +196,30 @@
   <p class="hint">click anywhere</p>
 </div>
 
-<!-- ══ SCREEN 2: DANCE ══ -->
+<!-- SCREEN 2 -->
 <div id="dance">
   <div class="glow"></div>
 
   <p class="dance-label top">you asked for it!! 🕺</p>
 
   <img id="cat"
-       src="https://media3.giphy.com/media/AheZDLIrOKu2Y/giphy.gif"
-       alt="dancing cat"/>
+    src="https://media3.giphy.com/media/AheZDLIrOKu2Y/giphy.gif"
+    alt="dancing cat"/>
 
   <p class="dance-label bot">we're dancing now 😻</p>
 
   <!-- floating notes -->
-  <div class="note" style="top:12%;left:8%; --nd:3.5s;--ndelay:0s;">🎵</div>
+  <div class="note" style="top:12%;left:8%;  --nd:3.5s;--ndelay:0s;">🎵</div>
   <div class="note" style="top:8%; right:10%;--nd:4.2s;--ndelay:.5s;">🎶</div>
-  <div class="note" style="bottom:18%;left:6%; --nd:5s;  --ndelay:.2s;">🎸</div>
+  <div class="note" style="bottom:18%;left:6%;--nd:5s;--ndelay:.2s;">🎸</div>
   <div class="note" style="bottom:12%;right:8%;--nd:3.8s;--ndelay:.9s;">🎹</div>
-  <div class="note" style="top:40%;left:3%; --nd:4.6s;--ndelay:.4s;font-size:22px;">♪</div>
-  <div class="note" style="top:35%;right:4%;--nd:3.2s;--ndelay:.7s;font-size:22px;">♫</div>
-  <div class="note" style="bottom:30%;left:20%;--nd:5.2s;--ndelay:1.1s;font-size:18px;">✦</div>
-  <div class="note" style="bottom:28%;right:20%;--nd:4s;  --ndelay:.3s;font-size:18px;">✦</div>
+  <div class="note" style="top:42%;left:3%; --nd:4.6s;--ndelay:.4s;font-size:22px;">♪</div>
+  <div class="note" style="top:38%;right:4%;--nd:3.2s;--ndelay:.7s;font-size:22px;">♫</div>
+  <div class="note" style="bottom:30%;left:22%;--nd:5.2s;--ndelay:1.1s;font-size:16px;">✦</div>
+  <div class="note" style="bottom:28%;right:22%;--nd:4s;--ndelay:.3s;font-size:16px;">✦</div>
+
+  <!-- hidden audio player — loads on click so autoplay is allowed -->
+  <iframe id="music" allow="autoplay; encrypted-media"></iframe>
 </div>
 
 <script>
@@ -239,51 +230,47 @@
     cur.style.top  = e.clientY + 'px';
   });
 
-  /* build phrase as clickable words */
+  /* build phrase */
   const words = ['click', 'here', 'to', 'dance', 'with', 'me'];
   const phraseEl = document.getElementById('phrase');
   words.forEach((w, i) => {
-    const span = document.createElement('span');
-    span.className = 'word';
-    span.textContent = w;
-    phraseEl.appendChild(span);
+    const s = document.createElement('span');
+    s.className = 'word';
+    s.textContent = w;
+    phraseEl.appendChild(s);
     if (i < words.length - 1) phraseEl.appendChild(document.createTextNode(' '));
   });
 
-  /* scatter tiny stars */
+  /* stars */
   const landing = document.getElementById('landing');
   for (let i = 0; i < 60; i++) {
     const s = document.createElement('div');
     s.className = 'star';
-    s.style.cssText = `
-      left:${Math.random()*100}%;
-      top:${Math.random()*100}%;
-      --d:${2+Math.random()*3}s;
-      --delay:${Math.random()*3}s;
-    `;
+    s.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${2+Math.random()*3}s;--delay:${Math.random()*3}s;`;
     landing.appendChild(s);
   }
 
-  /* click handler */
+  /* click → dance */
   const dance = document.getElementById('dance');
+  const music = document.getElementById('music');
   let clicked = false;
 
   landing.addEventListener('click', () => {
     if (clicked) return;
     clicked = true;
 
-    /* 1. explode landing */
     landing.classList.add('explode');
 
-    /* 2. after landing fades, reveal dance screen */
     setTimeout(() => {
       landing.style.display = 'none';
       dance.style.zIndex = '10';
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          dance.classList.add('open');
-        });
-      });
+
+      /* start music — set src after user interaction so autoplay works */
+      music.src = 'https://www.youtube.com/embed/SwaX1ySUIrs?autoplay=1&loop=1&playlist=SwaX1ySUIrs&controls=0&mute=0';
+
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        dance.classList.add('open');
+      }));
     }, 480);
   });
 </script>

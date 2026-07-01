@@ -155,40 +155,30 @@
       position:absolute; inset:0;
       opacity:0; transition:opacity 1.2s ease;
       overflow:hidden;
+      background:#000;
     }
     #after-plane.show { opacity:1; }
 
     /* ── MOODBOARD ── */
     #collage-wrap {
       position:absolute; inset:0;
+      background:#000;
       display:flex; align-items:center; justify-content:center;
-      /* blurry dark bg already from #portfolio */
-    }
-    #collage-wrap::before {
-      content:'';
-      position:absolute; inset:0;
-      background:radial-gradient(ellipse at center, rgba(30,20,10,.55) 0%, rgba(0,0,0,.88) 100%);
     }
     #collage-img {
-      position:relative; z-index:1;
-      max-width:92vw; max-height:92vh;
-      width:auto; height:auto;
-      border-radius:6px;
+      position:absolute; inset:0;
+      width:100%; height:100%;
+      object-fit:cover;
+      border-radius:0;
       box-shadow:
-        0 0 0 1px rgba(255,255,255,.06),
-        0 30px 80px rgba(0,0,0,.9),
-        0 10px 30px rgba(0,0,0,.7),
-        0 2px 8px rgba(0,0,0,.5);
-      transform:perspective(1200px) rotateX(2deg) rotateY(-1deg) scale(1);
+        inset 0 0 120px rgba(0,0,0,.7),
+        0 0 80px rgba(0,0,0,.9);
+      transform:perspective(1800px) rotateX(1.5deg) rotateY(-1deg) scale(1.01);
       transition:transform .6s ease, box-shadow .6s ease;
-      filter:drop-shadow(0 8px 32px rgba(0,0,0,.8));
+      filter:drop-shadow(0 0 40px rgba(0,0,0,1));
     }
     #collage-img:hover {
-      transform:perspective(1200px) rotateX(0deg) rotateY(0deg) scale(1.02);
-      box-shadow:
-        0 0 0 1px rgba(255,255,255,.1),
-        0 40px 100px rgba(0,0,0,.95),
-        0 15px 40px rgba(0,0,0,.8);
+      transform:perspective(1800px) rotateX(0deg) rotateY(0deg) scale(1.02);
     }
   </style>
 </head>

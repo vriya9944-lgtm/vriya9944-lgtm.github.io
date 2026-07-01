@@ -4,17 +4,19 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>dance with me 🐱</title>
-  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
 
-    html, body {
-      width:100%; height:100%;
-      overflow:hidden;
+    html { scroll-behavior:smooth; }
+    body {
       background:#000;
+      overflow:hidden;
       cursor:none;
+      font-family:'DM Sans',sans-serif;
     }
 
+    /* cursor */
     #cur {
       position:fixed; z-index:9999;
       width:12px; height:12px;
@@ -22,25 +24,31 @@
       pointer-events:none;
       transform:translate(-50%,-50%);
       mix-blend-mode:difference;
+      transition:transform .1s;
     }
 
-    /* ═══════════════════════
+    /* ════════════════════════
        SCREEN 1 — LANDING
-    ═══════════════════════ */
+    ════════════════════════ */
     #landing {
       position:fixed; inset:0;
       display:flex; flex-direction:column;
       align-items:center; justify-content:center;
-      background:#000;
-      z-index:10;
-      transition:opacity .5s ease, transform .5s ease;
-    }
-    #landing.explode {
-      opacity:0;
-      transform:scale(1.08);
-      pointer-events:none;
+      gap:10px;
+      z-index:20;
+      transition:opacity .45s ease, transform .45s ease;
     }
 
+    /* confetti particles (created in JS) */
+    .confetti {
+      position:absolute;
+      width:8px; height:8px;
+      border-radius:2px;
+      pointer-events:none;
+      opacity:0;
+    }
+
+    /* twinkling stars */
     .star {
       position:absolute;
       width:3px; height:3px;
@@ -49,138 +57,207 @@
       animation:twinkle var(--d,3s) ease-in-out infinite var(--delay,0s);
     }
     @keyframes twinkle {
-      0%,100%{ opacity:0; transform:scale(1); }
-      50%    { opacity:.6; transform:scale(1.4); }
+      0%,100%{ opacity:0; } 50%{ opacity:.55; }
     }
 
+    /* welcome line */
+    #welcome {
+      font-family:'Caveat',cursive;
+      font-size:clamp(20px,3vw,36px);
+      font-weight:700;
+      color:rgba(255,255,255,.55);
+      text-align:center;
+      letter-spacing:.5px;
+    }
+
+    /* main phrase */
     #phrase {
       font-family:'Caveat',cursive;
-      font-size:clamp(38px,7vw,90px);
+      font-size:clamp(40px,8vw,100px);
       font-weight:700;
       color:#fff;
       text-align:center;
-      line-height:1.2;
-      letter-spacing:-1px;
-      padding:0 24px;
-      cursor:none;
+      line-height:1.1;
+      padding:0 20px;
       user-select:none;
     }
-
     .word {
       display:inline-block;
       transition:transform .18s cubic-bezier(.34,1.56,.64,1), color .18s;
+      cursor:none;
     }
-    .word:hover { transform:rotate(-4deg) scale(1.1); color:#ffda79; }
-    .word:nth-child(even):hover { transform:rotate(4deg) scale(1.1); }
+    .word:hover { transform:rotate(-5deg) scale(1.12); color:#ffda79; }
+    .word:nth-child(even):hover { transform:rotate(5deg) scale(1.12); }
 
-    #ring {
+    /* rings */
+    .ring {
       position:absolute;
-      width:min(60vw,400px); height:min(60vw,400px);
       border-radius:50%;
-      border:1px solid rgba(255,255,255,.08);
-      animation:pulse-ring 2.5s ease-in-out infinite;
+      border:1px solid rgba(255,255,255,.06);
       pointer-events:none;
-    }
-    #ring2 {
-      position:absolute;
-      width:min(80vw,550px); height:min(80vw,550px);
-      border-radius:50%;
-      border:1px solid rgba(255,255,255,.04);
-      animation:pulse-ring 2.5s ease-in-out infinite .8s;
-      pointer-events:none;
+      animation:pulse-ring 3s ease-in-out infinite;
     }
     @keyframes pulse-ring {
-      0%,100%{ transform:scale(1); opacity:.5; }
-      50%    { transform:scale(1.05); opacity:1; }
+      0%,100%{ transform:scale(1); opacity:.4; }
+      50%    { transform:scale(1.04); opacity:.9; }
     }
 
-    .hint {
-      margin-top:28px;
-      font-family:'DM Sans',sans-serif;
-      font-size:12px;
-      letter-spacing:3px;
+    /* hint */
+    #hint {
+      font-size:11px;
+      font-weight:500;
+      letter-spacing:4px;
       text-transform:uppercase;
-      color:rgba(255,255,255,.35);
-      animation:fade-hint 2s ease-in-out infinite;
+      color:rgba(255,255,255,.75);
+      margin-top:8px;
+      animation:pulse-hint 2s ease-in-out infinite;
     }
-    @keyframes fade-hint { 0%,100%{opacity:.3} 50%{opacity:.7} }
+    @keyframes pulse-hint { 0%,100%{opacity:.6} 50%{opacity:1} }
 
-    /* ═══════════════════════
+    /* landing exit */
+    #landing.out {
+      opacity:0;
+      transform:scale(1.1);
+      pointer-events:none;
+    }
+
+    /* ════════════════════════
        SCREEN 2 — DANCE
-    ═══════════════════════ */
+    ════════════════════════ */
     #dance {
       position:fixed; inset:0;
       display:flex; flex-direction:column;
       align-items:center; justify-content:center;
       background:#000;
-      z-index:9;
+      z-index:10;
       clip-path:circle(0% at 50% 50%);
-      transition:clip-path .7s cubic-bezier(.4,0,.2,1);
+      transition:clip-path .75s cubic-bezier(.4,0,.2,1);
     }
     #dance.open { clip-path:circle(150% at 50% 50%); }
 
+    /* purple glow */
     .glow {
       position:absolute;
-      width:420px; height:420px;
+      width:500px; height:500px;
       border-radius:50%;
-      background:radial-gradient(circle, rgba(130,80,255,.22) 0%, transparent 70%);
+      background:radial-gradient(circle,rgba(130,60,255,.28) 0%,transparent 68%);
       animation:glow-pulse 2s ease-in-out infinite;
-      pointer-events:none;
-      z-index:0;
+      pointer-events:none; z-index:0;
     }
     @keyframes glow-pulse {
-      0%,100%{ transform:scale(1); opacity:.7; }
-      50%    { transform:scale(1.12); opacity:1; }
-    }
-
-    #cat {
-      position:relative; z-index:2;
-      height:clamp(240px,46vh,500px);
-      width:auto;
-      animation:cat-bounce .55s ease-in-out infinite alternate;
-    }
-    @keyframes cat-bounce {
-      from{ transform:translateY(0) scale(1); }
-      to  { transform:translateY(-14px) scale(1.02); }
+      0%,100%{ transform:scale(1); opacity:.6; }
+      50%    { transform:scale(1.15); opacity:1; }
     }
 
     .dance-label {
       font-family:'Caveat',cursive;
-      font-size:clamp(24px,4vw,52px);
+      font-size:clamp(22px,3.5vw,48px);
       font-weight:700;
       color:#fff;
       text-align:center;
-      position:relative; z-index:2;
+      position:relative; z-index:5;
       animation:label-in .6s cubic-bezier(.34,1.56,.64,1) both;
     }
-    .dance-label.top { margin-bottom:22px; animation-delay:.3s; }
-    .dance-label.bot { margin-top:22px; animation-delay:.5s; color:#ffda79; }
+    .dance-label.top { margin-bottom:18px; animation-delay:.2s; }
+    .dance-label.bot { margin-top:18px; animation-delay:.45s; color:#ffda79; }
     @keyframes label-in {
-      from{ opacity:0; transform:translateY(20px); }
+      from{ opacity:0; transform:translateY(22px); }
       to  { opacity:1; transform:translateY(0); }
     }
 
+    /* yt wrapper — hue-shift green → purple, crop to cat */
+    #yt-wrap {
+      position:relative; z-index:4;
+      width:clamp(260px,38vw,480px);
+      aspect-ratio:1/1;
+      overflow:hidden;
+      border-radius:20px;
+    }
+    #yt-wrap iframe {
+      width:200%;
+      height:200%;
+      margin-left:-50%;
+      margin-top:-38%;
+      border:none;
+      display:block;
+      /* shift green bg → dark purple so cat pops on black */
+      filter:hue-rotate(155deg) saturate(1.6) brightness(.95);
+      pointer-events:none;
+    }
+
+    /* floating notes */
     .note {
       position:absolute;
-      font-size:28px;
-      pointer-events:none;
-      z-index:3;
+      font-size:26px;
+      pointer-events:none; z-index:6;
       animation:note-float var(--nd,4s) ease-in-out infinite var(--ndelay,0s);
     }
     @keyframes note-float {
-      0%  { transform:translateY(0) rotate(0deg); opacity:.5; }
-      50% { transform:translateY(-32px) rotate(15deg); opacity:1; }
-      100%{ transform:translateY(0) rotate(0deg); opacity:.5; }
+      0%  { transform:translateY(0) rotate(0deg); opacity:.45; }
+      50% { transform:translateY(-30px) rotate(15deg); opacity:1; }
+      100%{ transform:translateY(0) rotate(0deg); opacity:.45; }
     }
 
-    /* hidden music iframe */
-    #music {
-      position:absolute;
-      width:1px; height:1px;
-      top:-999px; left:-999px;
-      opacity:.01;
+    /* "there's more" nudge */
+    #nudge {
+      position:fixed; bottom:32px; left:50%;
+      transform:translateX(-50%);
+      z-index:30;
+      text-align:center;
+      opacity:0;
       pointer-events:none;
-      border:none;
+      transition:opacity .7s ease;
+    }
+    #nudge.show { opacity:1; pointer-events:auto; cursor:none; }
+    #nudge p {
+      font-family:'Caveat',cursive;
+      font-size:clamp(18px,2.8vw,32px);
+      font-weight:700;
+      color:#fff;
+      line-height:1.3;
+    }
+    #nudge em {
+      font-style:normal;
+      color:#ffda79;
+      display:block;
+    }
+    #nudge .arr {
+      font-size:20px;
+      display:block;
+      margin-top:6px;
+      animation:bounce-arr 1.2s ease-in-out infinite;
+    }
+    @keyframes bounce-arr {
+      0%,100%{ transform:translateY(0); }
+      50%    { transform:translateY(7px); }
+    }
+
+    /* ════════════════════════
+       SCREEN 3 — PORTFOLIO
+    ════════════════════════ */
+    #portfolio {
+      position:relative;
+      min-height:100vh;
+      display:flex; flex-direction:column;
+      align-items:center; justify-content:center;
+      background:#000;
+      z-index:1;
+      padding:80px 24px;
+      /* hidden until unlocked */
+      display:none;
+    }
+    #portfolio h2 {
+      font-family:'Caveat',cursive;
+      font-size:clamp(38px,7vw,90px);
+      color:#fff; text-align:center;
+      margin-bottom:16px;
+    }
+    #portfolio p {
+      color:rgba(255,255,255,.45);
+      font-size:clamp(14px,1.8vw,18px);
+      text-align:center;
+      max-width:500px;
+      line-height:1.7;
     }
   </style>
 </head>
@@ -188,38 +265,51 @@
 
 <div id="cur"></div>
 
-<!-- SCREEN 1 -->
+<!-- ═══ SCREEN 1: LANDING ═══ -->
 <div id="landing">
-  <div id="ring"></div>
-  <div id="ring2"></div>
+  <div class="ring" style="width:min(55vw,380px);height:min(55vw,380px);animation-delay:0s;"></div>
+  <div class="ring" style="width:min(75vw,520px);height:min(75vw,520px);animation-delay:.9s;animation-duration:3.5s;"></div>
+
+  <p id="welcome">hi welcome, let's dance! 🎉</p>
   <div id="phrase"></div>
-  <p class="hint">click anywhere</p>
+  <p id="hint">click anywhere</p>
 </div>
 
-<!-- SCREEN 2 -->
+<!-- ═══ SCREEN 2: DANCE ═══ -->
 <div id="dance">
   <div class="glow"></div>
 
   <p class="dance-label top">you asked for it!! 🕺</p>
 
-  <img id="cat"
-    src="https://media3.giphy.com/media/AheZDLIrOKu2Y/giphy.gif"
-    alt="dancing cat"/>
+  <div id="yt-wrap">
+    <iframe id="yt"
+      allow="autoplay; encrypted-media"
+      allowfullscreen>
+    </iframe>
+  </div>
 
   <p class="dance-label bot">we're dancing now 😻</p>
 
-  <!-- floating notes -->
-  <div class="note" style="top:12%;left:8%;  --nd:3.5s;--ndelay:0s;">🎵</div>
-  <div class="note" style="top:8%; right:10%;--nd:4.2s;--ndelay:.5s;">🎶</div>
-  <div class="note" style="bottom:18%;left:6%;--nd:5s;--ndelay:.2s;">🎸</div>
-  <div class="note" style="bottom:12%;right:8%;--nd:3.8s;--ndelay:.9s;">🎹</div>
-  <div class="note" style="top:42%;left:3%; --nd:4.6s;--ndelay:.4s;font-size:22px;">♪</div>
-  <div class="note" style="top:38%;right:4%;--nd:3.2s;--ndelay:.7s;font-size:22px;">♫</div>
-  <div class="note" style="bottom:30%;left:22%;--nd:5.2s;--ndelay:1.1s;font-size:16px;">✦</div>
-  <div class="note" style="bottom:28%;right:22%;--nd:4s;--ndelay:.3s;font-size:16px;">✦</div>
+  <div class="note" style="top:10%;left:7%;  --nd:3.5s;--ndelay:0s;">🎵</div>
+  <div class="note" style="top:7%; right:9%; --nd:4.2s;--ndelay:.5s;">🎶</div>
+  <div class="note" style="bottom:16%;left:5%;--nd:5s; --ndelay:.2s;">🎸</div>
+  <div class="note" style="bottom:12%;right:7%;--nd:3.8s;--ndelay:.9s;">🎹</div>
+  <div class="note" style="top:42%;left:3%; --nd:4.6s;--ndelay:.4s;font-size:20px;">♪</div>
+  <div class="note" style="top:38%;right:4%;--nd:3.2s;--ndelay:.7s;font-size:20px;">♫</div>
+  <div class="note" style="bottom:35%;left:20%;--nd:5s;--ndelay:1s;font-size:14px;">✦</div>
+  <div class="note" style="bottom:32%;right:20%;--nd:4s;--ndelay:.3s;font-size:14px;">✦</div>
+</div>
 
-  <!-- hidden audio player — loads on click so autoplay is allowed -->
-  <iframe id="music" allow="autoplay; encrypted-media"></iframe>
+<!-- "there's more to me" nudge -->
+<div id="nudge" onclick="goPortfolio()">
+  <p>enjoyed? wait —<em>there's more to me ✨</em></p>
+  <span class="arr">↓ scroll down ↓</span>
+</div>
+
+<!-- ═══ SCREEN 3: PORTFOLIO ═══ -->
+<div id="portfolio">
+  <h2>there's more to me 🌙</h2>
+  <p>portfolio coming soon — watch this space.</p>
 </div>
 
 <script>
@@ -243,36 +333,94 @@
 
   /* stars */
   const landing = document.getElementById('landing');
-  for (let i = 0; i < 60; i++) {
+  for (let i = 0; i < 65; i++) {
     const s = document.createElement('div');
     s.className = 'star';
     s.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${2+Math.random()*3}s;--delay:${Math.random()*3}s;`;
     landing.appendChild(s);
   }
 
-  /* click → dance */
-  const dance = document.getElementById('dance');
-  const music = document.getElementById('music');
-  let clicked = false;
+  /* confetti burst on click */
+  const COLORS = ['#ffda79','#ff79c6','#a29bfe','#74b9ff','#55efc4','#fd79a8','#fff'];
+  function burst(x, y) {
+    for (let i = 0; i < 55; i++) {
+      const el = document.createElement('div');
+      el.className = 'confetti';
+      el.style.background = COLORS[Math.floor(Math.random()*COLORS.length)];
+      el.style.left = x + 'px';
+      el.style.top  = y + 'px';
+      el.style.position = 'fixed';
+      el.style.zIndex = '9000';
+      el.style.borderRadius = Math.random() > .5 ? '50%' : '2px';
+      document.body.appendChild(el);
 
-  landing.addEventListener('click', () => {
+      const angle = Math.random() * Math.PI * 2;
+      const dist  = 80 + Math.random() * 220;
+      const tx = Math.cos(angle) * dist;
+      const ty = Math.sin(angle) * dist;
+      const rot = (Math.random() - .5) * 720;
+      const dur = 500 + Math.random() * 500;
+
+      el.animate([
+        { opacity:1, transform:`translate(0,0) rotate(0deg) scale(1)` },
+        { opacity:0, transform:`translate(${tx}px,${ty}px) rotate(${rot}deg) scale(0)` }
+      ], { duration:dur, easing:'cubic-bezier(.2,.8,.5,1)', fill:'forwards' });
+
+      setTimeout(() => el.remove(), dur + 50);
+    }
+  }
+
+  /* click */
+  const dance  = document.getElementById('dance');
+  const nudge  = document.getElementById('nudge');
+  const ytEl   = document.getElementById('yt');
+  let clicked  = false;
+
+  landing.addEventListener('click', e => {
     if (clicked) return;
     clicked = true;
 
-    landing.classList.add('explode');
+    burst(e.clientX, e.clientY);
+
+    setTimeout(() => {
+      landing.classList.add('out');
+    }, 80);
 
     setTimeout(() => {
       landing.style.display = 'none';
-      dance.style.zIndex = '10';
 
-      /* start music — set src after user interaction so autoplay works */
-      music.src = 'https://www.youtube.com/embed/SwaX1ySUIrs?autoplay=1&loop=1&playlist=SwaX1ySUIrs&controls=0&mute=0';
+      /* load yt AFTER user interaction so autoplay+sound works */
+      ytEl.src = 'https://www.youtube.com/embed/hrQzECgGiP0?autoplay=1&loop=1&playlist=hrQzECgGiP0&controls=0&modestbranding=1&rel=0&playsinline=1&mute=0';
 
+      dance.style.zIndex = '15';
       requestAnimationFrame(() => requestAnimationFrame(() => {
         dance.classList.add('open');
       }));
     }, 480);
+
+    /* nudge after 6s */
+    setTimeout(() => nudge.classList.add('show'), 6000);
   });
+
+  /* go to portfolio */
+  function goPortfolio() {
+    const port = document.getElementById('portfolio');
+    port.style.display = 'flex';
+    document.body.style.overflow = 'auto';
+
+    dance.style.transition = 'opacity .5s, transform .5s';
+    dance.style.opacity = '0';
+    dance.style.transform = 'translateY(-30px)';
+    dance.style.pointerEvents = 'none';
+
+    nudge.style.opacity = '0';
+    nudge.style.pointerEvents = 'none';
+
+    setTimeout(() => {
+      dance.style.display = 'none';
+      port.scrollIntoView({ behavior:'smooth' });
+    }, 400);
+  }
 </script>
 </body>
 </html>

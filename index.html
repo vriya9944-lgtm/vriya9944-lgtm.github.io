@@ -187,18 +187,28 @@
   <svg id="flight-svg" xmlns="http://www.w3.org/2000/svg"
        viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice">
 
-    <!-- Route: smooth curve in → full circle loop → smooth curve out -->
+    <!-- Route: top-left → smooth bezier → loop-the-loop → bottom-right -->
+    <!-- Entry arrives at loop-left going DOWN (CCW arc starts DOWN) — perfectly smooth -->
     <path id="flight-path"
-      d="M 55,790 C 100,500 480,180 480,400 A 140,140 0 0,1 760,400 A 140,140 0 0,1 480,400 C 480,220 1100,30 1385,50"
-      fill="none" stroke="#FF1493" stroke-width="5"
-      stroke-dasharray="60 20" stroke-linecap="butt" opacity="0"/>
+      d="M 55,50 C 150,50 550,200 550,400 A 150,150 0 0,0 850,400 A 150,150 0 0,0 550,400 C 550,600 1200,760 1385,760"
+      fill="none" stroke="#FF1493" stroke-width="6"
+      stroke-dasharray="72 22" stroke-linecap="butt" opacity="0"/>
 
-    <!-- Hot pink paper plane — super big -->
+    <!-- Paper plane — folded paper look, super big -->
     <g id="plane-group" opacity="0">
-      <polygon points="264,0 -120,-132 -24,0"  fill="#ff85c8"/>
-      <polygon points="264,0 -120,-132 -120,0" fill="#FF1493"/>
-      <polygon points="264,0 -120,132  -24,0"  fill="#e8006e"/>
-      <polygon points="264,0 -120,132  -120,0" fill="#FF1493"/>
+      <!-- Bottom wing (hot pink) -->
+      <polygon points="220,0 -90,0 -110,148" fill="#FF1493"/>
+      <!-- Top wing (light pink) -->
+      <polygon points="220,0 -90,0 -110,-148" fill="#ffaad4"/>
+      <!-- Inner fold highlight (very light) -->
+      <polygon points="220,0 -90,0 -25,-72" fill="#ffd6ec"/>
+      <!-- Outline stroke -->
+      <polygon points="220,0 -110,-148 -90,0 -110,148"
+        fill="none" stroke="#b0004d" stroke-width="5" stroke-linejoin="round"/>
+      <!-- Center fold line -->
+      <line x1="-90" y1="0" x2="220" y2="0" stroke="#b0004d" stroke-width="4"/>
+      <!-- Inner crease -->
+      <line x1="-25" y1="-72" x2="220" y2="0" stroke="#d45090" stroke-width="2.5" stroke-linecap="round"/>
     </g>
   </svg>
 
@@ -395,7 +405,7 @@
       if (!animActive) return;
       planeGroup.style.opacity = '1';
       const start = performance.now();
-      const dur   = 3200;
+      const dur   = 3800;
 
       (function frame(now) {
         if (!animActive) return;

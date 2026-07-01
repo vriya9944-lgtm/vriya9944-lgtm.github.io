@@ -187,20 +187,18 @@
   <svg id="flight-svg" xmlns="http://www.w3.org/2000/svg"
        viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice">
 
-    <!-- Jagged dashed route: bottom-left → top-right -->
+    <!-- Route: diagonal → full circle loop → diagonal to top-right -->
     <path id="flight-path"
-      d="M 55,790 L 105,670 L 55,590 L 240,470 L 185,400
-         L 400,290 L 345,225 L 580,130 L 525,80
-         L 790,45 L 1060,75 L 1360,18"
-      fill="none" stroke="#FF1493" stroke-width="3"
-      stroke-dasharray="16 10" stroke-linecap="round" opacity="0"/>
+      d="M 55,790 L 480,400 A 140,140 0 0,0 760,400 A 140,140 0 0,1 480,400 L 1385,50"
+      fill="none" stroke="#FF1493" stroke-width="4"
+      stroke-dasharray="55 18" stroke-linecap="round" opacity="0"/>
 
     <!-- Hot pink paper plane (points right, rotated along path) -->
     <g id="plane-group" opacity="0">
-      <polygon points="22,0 -10,-11 -2,0" fill="#ff85c8"/>
-      <polygon points="22,0 -10,-11 -10,0" fill="#FF1493"/>
-      <polygon points="22,0 -10,11  -2,0" fill="#e8006e"/>
-      <polygon points="22,0 -10,11  -10,0" fill="#FF1493"/>
+      <polygon points="66,0 -30,-33 -6,0"  fill="#ff85c8"/>
+      <polygon points="66,0 -30,-33 -30,0" fill="#FF1493"/>
+      <polygon points="66,0 -30,33  -6,0"  fill="#e8006e"/>
+      <polygon points="66,0 -30,33  -30,0" fill="#FF1493"/>
     </g>
   </svg>
 
@@ -334,17 +332,13 @@
   const planeGroup  = document.getElementById('plane-group');
   const afterPlane  = document.getElementById('after-plane');
   let planeShown    = false;
+  let animActive    = false;
 
   function showPortfolio() {
     if (planeShown) return; planeShown = true;
-
-    /* fade out dance + ctas */
     [dance, hintTR, topCta, scrollCta].forEach(el => {
-      el.style.transition = 'opacity .5s';
-      el.style.opacity = '0';
+      el.style.transition = 'opacity .5s'; el.style.opacity = '0';
     });
-
-    /* show portfolio section */
     portfolio.classList.add('visible');
     requestAnimationFrame(() => requestAnimationFrame(() => {
       portfolio.classList.add('faded-in');
@@ -352,44 +346,74 @@
     }));
   }
 
+  function hidePortfolio() {
+    animActive = false;
+    portfolio.classList.remove('faded-in');
+    [dance, hintTR, topCta, scrollCta].forEach(el => {
+      el.style.transition = 'opacity .5s'; el.style.opacity = '';
+    });
+    setTimeout(() => {
+      portfolio.classList.remove('visible');
+      flightPath.style.transition = ''; flightPath.style.opacity = '0';
+      planeGroup.style.opacity = '0';
+      planeGroup.setAttribute('transform', '');
+      flightSvg.style.opacity = '1';
+      afterPlane.classList.remove('show');
+      planeShown = false;
+    }, 700);
+  }
+
+  function goBackToLanding() {
+    clearSeq();
+    catVid.src = ''; catVid.load();
+    ytAudio.src = '';
+    dance.style.transition = 'opacity .5s'; dance.style.opacity = '0';
+    setTimeout(() => {
+      dance.classList.remove('open');
+      dance.style.transition = ''; dance.style.opacity = ''; dance.style.zIndex = '10';
+      landing.style.display = '';
+      catWrap.classList.remove('popping');
+      clicked = false;
+    }, 500);
+  }
+
   function startPlaneAnim() {
     const totalLen = flightPath.getTotalLength();
-
-    /* fade path in */
+    animActive = true;
     flightPath.style.transition = 'opacity .6s';
-    flightPath.style.opacity    = '0.55';
+    flightPath.style.opacity    = '0.6';
 
     setTimeout(() => {
+      if (!animActive) return;
       planeGroup.style.opacity = '1';
       const start = performance.now();
-      const dur   = 2600;
+      const dur   = 3200;
 
       (function frame(now) {
+        if (!animActive) return;
         const t      = Math.min((now - start) / dur, 1);
         const eased  = t < .5 ? 2*t*t : -1+(4-2*t)*t;
         const dist   = eased * totalLen;
         const pt     = flightPath.getPointAtLength(dist);
-        const ptNext = flightPath.getPointAtLength(Math.min(dist + 6, totalLen));
+        const ptNext = flightPath.getPointAtLength(Math.min(dist + 8, totalLen));
         const angle  = Math.atan2(ptNext.y - pt.y, ptNext.x - pt.x) * 180 / Math.PI;
-
         planeGroup.setAttribute('transform', `translate(${pt.x},${pt.y}) rotate(${angle})`);
-
         if (t < 1) {
           requestAnimationFrame(frame);
         } else {
-          /* plane reached end — fade entire SVG out */
           flightSvg.style.opacity = '0';
-          /* show next content */
           setTimeout(() => afterPlane.classList.add('show'), 900);
         }
       })(start);
     }, 600);
   }
 
-  /* scroll / click triggers */
+  /* scroll triggers — down to go forward, up to go back */
   scrollCta.addEventListener('click', showPortfolio);
   window.addEventListener('wheel', e => {
-    if (scrollCta.classList.contains('show') && e.deltaY > 0) showPortfolio();
+    if (planeShown && e.deltaY < 0)                                      { hidePortfolio(); return; }
+    if (!planeShown && dance.classList.contains('open') && e.deltaY < 0) { goBackToLanding(); return; }
+    if (scrollCta.classList.contains('show') && e.deltaY > 0)            { showPortfolio(); }
   }, { passive:true });
 
   /* landing click */

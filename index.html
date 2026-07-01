@@ -108,6 +108,41 @@
       border:none;
       pointer-events:none;
     }
+
+    /* enjoyed — top right, hidden until after 2 loops */
+    #top-cta {
+      position:fixed; top:28px; right:32px;
+      z-index:30; text-align:right;
+      opacity:0; pointer-events:none;
+      transition:opacity .8s ease;
+    }
+    #top-cta.show { opacity:1; pointer-events:auto; }
+    #top-cta p {
+      font-family:'Caveat',cursive;
+      font-size:clamp(16px,2.2vw,26px);
+      font-weight:700; color:#fff; line-height:1.35;
+    }
+    #top-cta em { font-style:normal; color:#ffda79; display:block; }
+
+    /* scroll down — bottom centre, hidden until after 2 loops */
+    #bot-cta {
+      position:fixed; bottom:28px; left:50%;
+      transform:translateX(-50%);
+      z-index:30; text-align:center;
+      opacity:0; pointer-events:none;
+      transition:opacity .8s ease;
+    }
+    #bot-cta.show { opacity:1; pointer-events:auto; cursor:none; }
+    #bot-cta p {
+      font-family:'Caveat',cursive;
+      font-size:clamp(15px,2vw,22px);
+      font-weight:700; color:rgba(255,255,255,.7);
+    }
+    #bot-cta .arr {
+      font-size:18px; color:#ffda79; display:block; margin-top:4px;
+      animation:bounce-arr 1.2s ease-in-out infinite;
+    }
+    @keyframes bounce-arr { 0%,100%{transform:translateY(0)} 50%{transform:translateY(7px)} }
   </style>
 </head>
 <body>
@@ -129,6 +164,17 @@
     <iframe id="yt" allow="autoplay; encrypted-media"></iframe>
     <div id="cat-overlay"></div>
   </div>
+</div>
+
+<!-- top-right text after 2 loops -->
+<div id="top-cta">
+  <p>enjoyed? but wait —<em>there's more to me ✨</em></p>
+</div>
+
+<!-- bottom-centre text after 2 loops -->
+<div id="bot-cta">
+  <p>look down</p>
+  <span class="arr">↓ scroll down ↓</span>
 </div>
 
 <script>
@@ -173,18 +219,52 @@
     }
   }
 
-  /* YouTube video — set src directly on click so autoplay+audio is allowed
-     within the browser's user-gesture window */
+  /* YouTube via direct src + postMessage for loop counting */
   const YT_SRC = 'https://www.youtube.com/embed/hrQzECgGiP0' +
     '?autoplay=1&controls=0&rel=0&playsinline=1' +
-    '&disablekb=1&fs=0&iv_load_policy=3&modestbranding=1&mute=0';
+    '&disablekb=1&fs=0&iv_load_policy=3&modestbranding=1&mute=0&enablejsapi=1';
 
-  const ytEl  = document.getElementById('yt');
-  const dance = document.getElementById('dance');
+  const ytEl   = document.getElementById('yt');
+  const dance  = document.getElementById('dance');
+  const topCta = document.getElementById('top-cta');
+  const botCta = document.getElementById('bot-cta');
+  let loopCount = 0;
 
-  /* click cat → replay */
+  /* listen for state changes from YouTube player */
+  window.addEventListener('message', e => {
+    if (!e.data) return;
+    let data;
+    try { data = JSON.parse(e.data); } catch { return; }
+
+    /* subscribe to events once player is ready */
+    if (data.event === 'onReady') {
+      ytEl.contentWindow.postMessage(
+        JSON.stringify({event:'listening', id: data.id || 1}), '*'
+      );
+    }
+
+    /* video ended */
+    if (data.event === 'infoDelivery' && data.info && data.info.playerState === 0) {
+      loopCount++;
+      if (loopCount < 2) {
+        /* seek back to 0 and replay */
+        ytEl.contentWindow.postMessage(JSON.stringify({event:'command', func:'seekTo',    args:[0, true]}), '*');
+        ytEl.contentWindow.postMessage(JSON.stringify({event:'command', func:'playVideo', args:[]}),        '*');
+      } else {
+        /* after 2 plays: show the text */
+        topCta.classList.add('show');
+        setTimeout(() => botCta.classList.add('show'), 400);
+      }
+    }
+  });
+
+  /* click cat → hide text, reset, replay */
   document.getElementById('cat-overlay').addEventListener('click', () => {
-    ytEl.src = YT_SRC;
+    loopCount = 0;
+    topCta.classList.remove('show');
+    botCta.classList.remove('show');
+    ytEl.contentWindow.postMessage(JSON.stringify({event:'command', func:'seekTo',    args:[0, true]}), '*');
+    ytEl.contentWindow.postMessage(JSON.stringify({event:'command', func:'playVideo', args:[]}),        '*');
   });
 
   /* landing click */
@@ -192,7 +272,7 @@
   landing.addEventListener('click', e => {
     if (clicked) return; clicked = true;
 
-    ytEl.src = YT_SRC; // ← synchronous, inside gesture window → audio allowed
+    ytEl.src = YT_SRC; /* set src synchronously → autoplay+audio allowed */
 
     burst(e.clientX, e.clientY);
     setTimeout(() => {

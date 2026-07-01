@@ -107,21 +107,19 @@
       white-space:nowrap; text-align:center;
     }
 
-    /* 2 — enjoyed, top right */
+    /* 2 — enjoyed + look down, top right */
     #top-cta {
       top:28px; right:32px; text-align:right;
       font-size:clamp(16px,2.2vw,26px); color:#fff; line-height:1.4;
     }
     #top-cta em { font-style:normal; color:#ffda79; display:block; }
-
-    /* 3 — look down, centred */
-    #hint-lookdown {
-      bottom:22%; left:50%; transform:translateX(-50%);
-      font-size:clamp(18px,2.5vw,30px); color:rgba(255,255,255,.8);
-      white-space:nowrap; text-align:center;
+    #top-cta .look-down {
+      font-size:clamp(14px,1.8vw,22px);
+      color:rgba(255,255,255,.65);
+      margin-top:6px; display:block;
     }
 
-    /* 4 — scroll down (no arrows), bottom centre */
+    /* 3 — scroll (no arrows), bottom centre */
     #scroll-cta {
       bottom:28px; left:50%; transform:translateX(-50%);
       font-size:clamp(18px,2.5vw,28px); color:#ffda79;
@@ -137,7 +135,7 @@
 <div id="landing">
   <div class="ring" style="width:min(55vw,380px);height:min(55vw,380px);"></div>
   <div class="ring" style="width:min(75vw,520px);height:min(75vw,520px);animation-delay:.9s;animation-duration:3.5s;"></div>
-  <p id="welcome">hi welcome!</p>
+  <p id="welcome">hi welcome! 🐾</p>
   <div id="phrase"></div>
   <p id="hint">click anywhere</p>
 </div>
@@ -152,10 +150,12 @@
 </div>
 
 <!-- sequence text elements -->
-<div id="hint-topright" class="seq-text">look top right →</div>
-<div id="top-cta"       class="seq-text"><p>enjoyed? but wait —<em>there's more to me ✨</em></p></div>
-<div id="hint-lookdown" class="seq-text">look down</div>
-<div id="scroll-cta"    class="seq-text">scroll down</div>
+<div id="hint-topright" class="seq-text">look top right</div>
+<div id="top-cta" class="seq-text">
+  <p>enjoyed? but wait —<em>there's more to me ✨</em></p>
+  <span class="look-down">look down</span>
+</div>
+<div id="scroll-cta" class="seq-text">scroll</div>
 
 <!-- audio-only YouTube, hidden off-screen -->
 <iframe id="yt-audio"
@@ -211,10 +211,9 @@
   const catOverlay  = document.getElementById('cat-overlay');
   const ytAudio     = document.getElementById('yt-audio');
   const dance       = document.getElementById('dance');
-  const hintTR      = document.getElementById('hint-topright');
-  const topCta      = document.getElementById('top-cta');
-  const hintLD      = document.getElementById('hint-lookdown');
-  const scrollCta   = document.getElementById('scroll-cta');
+  const hintTR    = document.getElementById('hint-topright');
+  const topCta    = document.getElementById('top-cta');
+  const scrollCta = document.getElementById('scroll-cta');
 
   const MP4_SRC   = 'https://media1.tenor.com/m/Rd0jrWH5JjgAAAAd/cat-scuba.mp4';
   const GIF_SRC   = 'https://media1.tenor.com/m/Rd0jrWH5JjgAAAAd/cat-scuba.gif';
@@ -225,19 +224,18 @@
 
   function clearSeq() {
     timers.forEach(clearTimeout); timers = [];
-    [hintTR, topCta, hintLD, scrollCta].forEach(el => el.classList.remove('show'));
+    [hintTR, topCta, scrollCta].forEach(el => el.classList.remove('show'));
   }
 
-  /* sequence shown after cat finishes one play */
+  /* sequence after cat finishes — each step visible for ~5s */
   function runSequence() {
     clearSeq();
     const t = id => timers.push(id);
-    t(setTimeout(() => hintTR.classList.add('show'),     300));   // "look top right →"
-    t(setTimeout(() => hintTR.classList.remove('show'),  2400));  // fades out
-    t(setTimeout(() => topCta.classList.add('show'),     2900));  // "enjoyed?" top right
-    t(setTimeout(() => hintLD.classList.add('show'),     5000));  // "look down"
-    t(setTimeout(() => hintLD.classList.remove('show'),  7000));  // fades out
-    t(setTimeout(() => scrollCta.classList.add('show'),  7500));  // "scroll down"
+    t(setTimeout(() => hintTR.classList.add('show'),    300));   // "look top right"
+    t(setTimeout(() => hintTR.classList.remove('show'), 5300));  // fades after 5s
+    t(setTimeout(() => topCta.classList.add('show'),    6000));  // "enjoyed?" + "look down" together
+    t(setTimeout(() => topCta.classList.remove('show'), 11000)); // fades after 5s
+    t(setTimeout(() => scrollCta.classList.add('show'), 11700)); // "scroll"
   }
 
   /* start or restart video + audio */

@@ -187,18 +187,18 @@
   <svg id="flight-svg" xmlns="http://www.w3.org/2000/svg"
        viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice">
 
-    <!-- Route: diagonal → full circle loop → diagonal to top-right -->
+    <!-- Route: smooth curve in → full circle loop → smooth curve out -->
     <path id="flight-path"
-      d="M 55,790 L 480,400 A 140,140 0 0,1 760,400 A 140,140 0 0,1 480,400 L 1385,50"
-      fill="none" stroke="#FF1493" stroke-width="4"
-      stroke-dasharray="55 18" stroke-linecap="round" opacity="0"/>
+      d="M 55,790 C 100,500 480,180 480,400 A 140,140 0 0,1 760,400 A 140,140 0 0,1 480,400 C 480,220 1100,30 1385,50"
+      fill="none" stroke="#FF1493" stroke-width="5"
+      stroke-dasharray="60 20" stroke-linecap="butt" opacity="0"/>
 
-    <!-- Hot pink paper plane (points right, rotated along path) -->
+    <!-- Hot pink paper plane — super big -->
     <g id="plane-group" opacity="0">
-      <polygon points="66,0 -30,-33 -6,0"  fill="#ff85c8"/>
-      <polygon points="66,0 -30,-33 -30,0" fill="#FF1493"/>
-      <polygon points="66,0 -30,33  -6,0"  fill="#e8006e"/>
-      <polygon points="66,0 -30,33  -30,0" fill="#FF1493"/>
+      <polygon points="264,0 -120,-132 -24,0"  fill="#ff85c8"/>
+      <polygon points="264,0 -120,-132 -120,0" fill="#FF1493"/>
+      <polygon points="264,0 -120,132  -24,0"  fill="#e8006e"/>
+      <polygon points="264,0 -120,132  -120,0" fill="#FF1493"/>
     </g>
   </svg>
 

@@ -159,74 +159,36 @@
     #after-plane.show { opacity:1; }
 
     /* ── MOODBOARD ── */
-    .mb-photo {
-      position:absolute; overflow:hidden;
-      box-shadow:0 20px 60px rgba(0,0,0,.9), 0 4px 12px rgba(0,0,0,.5);
+    #collage-wrap {
+      position:absolute; inset:0;
+      display:flex; align-items:center; justify-content:center;
+      /* blurry dark bg already from #portfolio */
     }
-    .mb-photo img { width:100%; height:100%; object-fit:cover; display:block; }
-
-    /* LEFT COLUMN */
-    .mb-p1 { /* B&W mirror selfie – top left */
-      left:1%; top:2%; width:23vw; height:44vh;
-      transform:rotate(2deg);
+    #collage-wrap::before {
+      content:'';
+      position:absolute; inset:0;
+      background:radial-gradient(ellipse at center, rgba(30,20,10,.55) 0%, rgba(0,0,0,.88) 100%);
     }
-    .mb-p7 { /* pier sunset – bottom left */
-      left:2%; bottom:2%; width:22vw; height:40vh;
-      transform:rotate(-3deg);
+    #collage-img {
+      position:relative; z-index:1;
+      max-width:92vw; max-height:92vh;
+      width:auto; height:auto;
+      border-radius:6px;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,.06),
+        0 30px 80px rgba(0,0,0,.9),
+        0 10px 30px rgba(0,0,0,.7),
+        0 2px 8px rgba(0,0,0,.5);
+      transform:perspective(1200px) rotateX(2deg) rotateY(-1deg) scale(1);
+      transition:transform .6s ease, box-shadow .6s ease;
+      filter:drop-shadow(0 8px 32px rgba(0,0,0,.8));
     }
-
-    /* CENTER HERO */
-    .mb-p2 { /* jewelry selfie – tall center */
-      left:25%; top:2%; width:28vw; height:94vh;
-      transform:rotate(-1deg);
-    }
-
-    /* RIGHT COLUMN */
-    .mb-p3 { /* park – top right */
-      right:1%; top:2%; width:26vw; height:28vh;
-      transform:rotate(-2deg);
-    }
-    .mb-p4 { /* concert – right mid */
-      right:1%; top:32%; width:25vw; height:20vh;
-      transform:rotate(1.5deg);
-    }
-    .mb-p5 { /* church – right lower */
-      right:2%; top:54%; width:24vw; height:20vh;
-      transform:rotate(-1.5deg);
-    }
-    .mb-p6 { /* field selfie – right bottom */
-      right:1%; top:76%; width:25vw; height:21vh;
-      transform:rotate(1deg);
-    }
-
-    /* TEXT OVERLAYS */
-    .mb-text {
-      position:absolute; pointer-events:none; user-select:none;
-    }
-    .mb-title {
-      font-family:'Pinyon Script',cursive;
-      font-size:clamp(52px,7.5vw,110px);
-      color:rgba(255,255,255,.82);
-      left:-1%; top:40%;
-      transform:rotate(-13deg);
-      line-height:1.1;
-      white-space:nowrap;
-    }
-    .mb-script {
-      font-family:'Caveat',cursive; font-weight:700;
-      font-size:clamp(11px,1.3vw,18px);
-      color:rgba(255,255,255,.35);
-      right:28%; top:35%;
-      transform:rotate(5deg);
-      line-height:1.6;
-    }
-    .mb-quote {
-      font-family:'Caveat',cursive; font-weight:700;
-      font-size:clamp(12px,1.4vw,20px);
-      color:rgba(255,255,255,.38);
-      left:26%; bottom:3%;
-      transform:rotate(-2deg);
-      white-space:nowrap;
+    #collage-img:hover {
+      transform:perspective(1200px) rotateX(0deg) rotateY(0deg) scale(1.02);
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,.1),
+        0 40px 100px rgba(0,0,0,.95),
+        0 15px 40px rgba(0,0,0,.8);
     }
   </style>
 </head>
@@ -274,16 +236,9 @@
   </div>
 
   <div id="after-plane">
-    <div class="mb-photo mb-p1"><img src="images/IMG_1975.jpg"        alt=""></div>
-    <div class="mb-photo mb-p7"><img src="images/IMG_2135.JPG"        alt=""></div>
-    <div class="mb-photo mb-p2"><img src="images/IMG_0636.JPG"        alt=""></div>
-    <div class="mb-photo mb-p3"><img src="images/IMG_2337.JPG"        alt=""></div>
-    <div class="mb-photo mb-p4"><img src="images/ARIRANG%20TOUR.jpeg" alt=""></div>
-    <div class="mb-photo mb-p5"><img src="images/IMG_1666.JPG"        alt=""></div>
-    <div class="mb-photo mb-p6"><img src="images/IMG_1693.JPG"        alt=""></div>
-    <p class="mb-text mb-title">fleurs<br>d'amour</p>
-    <p class="mb-text mb-script">the sun hits<br>the flowers<br>just right</p>
-    <p class="mb-text mb-quote">take time to do what makes your soul happy ✨</p>
+    <div id="collage-wrap">
+      <img id="collage-img" src="images/collage.png" alt="riya virdi collage">
+    </div>
   </div>
 </div>
 

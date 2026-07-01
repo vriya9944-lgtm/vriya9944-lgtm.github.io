@@ -3,356 +3,289 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Riya Virdi</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Caveat:wght@600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <title>dance with me 🐱</title>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
 
     html, body {
       width:100%; height:100%;
       overflow:hidden;
-      /* warm parchment — Fleurs d'Amour background */
-      background:#f0e6d2;
-      font-family:'DM Sans',sans-serif;
+      background:#000;
       cursor:none;
     }
 
-    #cur  { position:fixed;width:8px;height:8px;background:#2a1f14;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%); }
-    #curR { position:fixed;width:28px;height:28px;border:1.5px solid rgba(42,31,20,.35);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:left .1s,top .1s; }
+    /* custom cursor */
+    #cur {
+      position:fixed; z-index:9999;
+      width:12px; height:12px;
+      background:#fff; border-radius:50%;
+      pointer-events:none;
+      transform:translate(-50%,-50%);
+      mix-blend-mode:difference;
+      transition:width .15s, height .15s;
+    }
+    body:hover #cur { width:12px; height:12px; }
 
-    /* ═══════════════════════════════════════════
-       COLLAGE — Fleurs d'Amour style
-       Cream background + scattered photos at angles
-       3D mouse parallax: each photo has data-depth
-       (0 = far / barely moves, 1 = close / moves a lot)
-    ═══════════════════════════════════════════ */
-    #board {
-      position:fixed;
-      inset:0;
-      will-change:filter,opacity;
+    /* ═══════════════════════
+       SCREEN 1 — LANDING
+    ═══════════════════════ */
+    #landing {
+      position:fixed; inset:0;
+      display:flex; flex-direction:column;
+      align-items:center; justify-content:center;
+      background:#000;
+      z-index:10;
+      transition:opacity .5s ease, transform .5s ease;
+    }
+    #landing.explode {
+      opacity:0;
+      transform:scale(1.08);
+      pointer-events:none;
     }
 
-    .ph {
+    /* floating tiny stars */
+    .star {
       position:absolute;
-      overflow:hidden;
-      will-change:transform;
-    }
-    .ph img {
-      width:100%; height:100%;
-      object-fit:cover;
-      object-position:center;
-      display:block;
-    }
-
-    /* polaroid border */
-    .pol {
+      width:3px; height:3px;
       background:#fff;
-      padding:6px 6px 20px;
-      box-shadow:0 6px 22px rgba(42,31,20,.18), 0 1px 4px rgba(42,31,20,.12);
+      border-radius:50%;
+      opacity:0;
+      animation:twinkle var(--d,3s) ease-in-out infinite var(--delay,0s);
     }
-    /* borderless shadow */
-    .ph:not(.pol) {
-      box-shadow:0 4px 20px rgba(42,31,20,.22);
-    }
-
-    /* ── photo positions & base rotations ── */
-
-    /* LAYER 0 — back (depth 0.15) */
-    .a { width:54vw;height:40vh; top:-3vh; left:18vw; }        /* wide top — concert   */
-    .b { width:60vw;height:34vh; bottom:-3vh; left:5vw; }      /* wide bottom — lights */
-
-    /* LAYER 1 — mid-back (depth 0.35) */
-    .c { width:30vw;height:56vh; top:6vh;  left:-3vw; }        /* left portrait        */
-    .d { width:28vw;height:32vh; bottom:8vh; right:4vw; }      /* btm right            */
-
-    /* LAYER 2 — mid (depth 0.55) */
-    .e { width:44vw;height:62vh; top:8vh;  left:26vw; }        /* HERO — centre        */
-    .f { width:26vw;height:32vh; bottom:6vh; left:30vw; }      /* reading — overlap    */
-
-    /* LAYER 3 — front (depth 0.85) */
-    .g { width:22vw;height:30vh; top:3vh;  right:3vw; }        /* top right polaroid   */
-    .h { width:20vw;height:24vh; top:36vh; left:12vw; }        /* mid left small pol   */
-    .i { width:24vw;height:38vh; top:14vh; right:4vw; }        /* right portrait       */
-
-    /* ── big decorative text (Fleurs d'Amour style) ── */
-    #bigtext {
-      position:absolute;
-      bottom:11vh; left:1vw;
-      font-family:'Playfair Display',serif;
-      font-size:clamp(48px,8vw,100px);
-      font-weight:700;
-      font-style:italic;
-      color:#2a1f14;
-      line-height:1;
-      pointer-events:none;
-      z-index:6;
-      will-change:transform;
-      opacity:.88;
-      letter-spacing:-2px;
+    @keyframes twinkle {
+      0%,100%{ opacity:0; transform:scale(1); }
+      50%    { opacity:.6; transform:scale(1.4); }
     }
 
-    /* ── handwritten stickers ── */
-    .stk {
-      position:absolute;
-      font-family:'Caveat',cursive;
-      font-weight:700;
-      pointer-events:none;
-      line-height:1.2;
-      z-index:2;
-    }
-
-    /* ── floating icons ── */
-    .fi {
-      position:absolute;
-      font-size:18px;
-      pointer-events:none;
-      z-index:9;
-      animation:flt 5s ease-in-out infinite;
-    }
-    @keyframes flt {
-      0%,100%{ transform:translateY(0) rotate(0deg); }
-      50%    { transform:translateY(-10px) rotate(8deg); }
-    }
-
-    /* ══ VEIL (dark fade for scroll reveal) ══ */
-    #veil {
-      position:fixed;inset:0;
-      background:#0a0806;
-      opacity:0;z-index:10;
-      pointer-events:none;
-      will-change:opacity;
-    }
-
-    /* ══ NAME ══ */
-    #nameWrap {
-      position:fixed;
-      top:50%;left:50%;
-      transform:translate(-50%,-52%);
-      z-index:11;text-align:center;
-      pointer-events:none;
-      line-height:0.86;
-    }
-    .nline { display:block;overflow:hidden; }
-    .nword {
-      display:inline-block;
-      font-family:'Playfair Display',serif;
-      font-weight:700;
-      font-size:clamp(82px,14vw,162px);
-      color:#f2e8d8;
-      letter-spacing:-3px;
-      transform:translateY(112%);
-      will-change:transform;
-    }
-
-    /* ══ PHRASE ══ */
+    /* phrase */
     #phrase {
-      position:fixed;
-      bottom:9%;left:50%;
-      transform:translateX(-50%) translateY(28px);
-      z-index:11;text-align:center;
-      opacity:0;pointer-events:none;
-      width:min(840px,90vw);
-      will-change:opacity,transform;
+      font-family:'Caveat',cursive;
+      font-size:clamp(36px,7vw,90px);
+      font-weight:700;
+      color:#fff;
+      text-align:center;
+      line-height:1.15;
+      letter-spacing:-1px;
+      padding:0 24px;
+      cursor:none;
+      user-select:none;
+      position:relative;
     }
-    .ph-age {
-      font-size:10px;font-weight:600;
-      letter-spacing:5px;text-transform:uppercase;
-      color:#c9a96e;margin-bottom:20px;
-    }
-    .ph-text {
-      font-family:'Playfair Display',serif;
-      font-size:clamp(23px,3.7vw,44px);
-      font-weight:700;font-style:italic;
-      color:#f2e8d8;line-height:1.4;
-    }
-    .ph-text em { color:#c9a96e;font-style:normal; }
 
-    /* ══ SCROLL HINT ══ */
-    #hint {
-      position:fixed;bottom:22px;left:50%;
-      transform:translateX(-50%);z-index:20;
-      display:flex;flex-direction:column;align-items:center;gap:8px;
+    /* each word gets a hover wiggle */
+    .word {
+      display:inline-block;
+      transition:transform .18s cubic-bezier(.34,1.56,.64,1), color .18s;
+      position:relative;
     }
-    #hint .ln { width:1px;height:36px;background:linear-gradient(to bottom,rgba(42,31,20,.5),transparent);animation:lp 2s ease-in-out infinite; }
-    #hint .tx { font-size:8px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:rgba(42,31,20,.35); }
-    @keyframes lp { 0%,100%{opacity:.3}50%{opacity:1} }
+    .word:hover {
+      transform:rotate(-4deg) scale(1.08);
+      color:#ffda79;
+    }
+    .word:nth-child(even):hover { transform:rotate(4deg) scale(1.08); }
+
+    /* subtle pulse ring behind phrase */
+    #ring {
+      position:absolute;
+      width:min(60vw,400px); height:min(60vw,400px);
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.08);
+      animation:pulse-ring 2.5s ease-in-out infinite;
+      pointer-events:none;
+    }
+    #ring2 {
+      position:absolute;
+      width:min(80vw,550px); height:min(80vw,550px);
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.04);
+      animation:pulse-ring 2.5s ease-in-out infinite .8s;
+      pointer-events:none;
+    }
+    @keyframes pulse-ring {
+      0%,100%{ transform:scale(1); opacity:.5; }
+      50%    { transform:scale(1.05); opacity:1; }
+    }
+
+    .hint {
+      margin-top:28px;
+      font-family:'DM Sans',sans-serif;
+      font-size:12px;
+      letter-spacing:3px;
+      text-transform:uppercase;
+      color:rgba(255,255,255,.3);
+      animation:fade-hint 2s ease-in-out infinite;
+    }
+    @keyframes fade-hint { 0%,100%{opacity:.3} 50%{opacity:.7} }
+
+    /* ═══════════════════════
+       SCREEN 2 — DANCE
+    ═══════════════════════ */
+    #dance {
+      position:fixed; inset:0;
+      display:flex; flex-direction:column;
+      align-items:center; justify-content:center;
+      background:#000;
+      z-index:9;
+      clip-path:circle(0% at 50% 50%);
+      transition:clip-path .7s cubic-bezier(.4,0,.2,1);
+    }
+    #dance.open {
+      clip-path:circle(150% at 50% 50%);
+    }
+
+    /* glow behind cat */
+    .glow {
+      position:absolute;
+      width:420px; height:420px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(130,80,255,.22) 0%, transparent 70%);
+      animation:glow-pulse 2s ease-in-out infinite;
+      pointer-events:none;
+      z-index:0;
+    }
+    @keyframes glow-pulse {
+      0%,100%{ transform:scale(1); opacity:.7; }
+      50%    { transform:scale(1.12); opacity:1; }
+    }
+
+    /* dancing cat */
+    #cat {
+      position:relative; z-index:2;
+      height:clamp(240px,45vh,480px);
+      width:auto;
+      animation:cat-bounce .6s ease-in-out infinite alternate;
+      border-radius:4px;
+    }
+    @keyframes cat-bounce {
+      from{ transform:translateY(0) scale(1); }
+      to  { transform:translateY(-12px) scale(1.02); }
+    }
+
+    /* top & bottom text */
+    .dance-label {
+      font-family:'Caveat',cursive;
+      font-size:clamp(24px,4vw,52px);
+      font-weight:700;
+      color:#fff;
+      text-align:center;
+      letter-spacing:-0.5px;
+      position:relative; z-index:2;
+      animation:label-in .6s cubic-bezier(.34,1.56,.64,1) both;
+    }
+    .dance-label.top { margin-bottom:24px; animation-delay:.3s; }
+    .dance-label.bot { margin-top:24px; animation-delay:.5s; color:#ffda79; }
+    @keyframes label-in {
+      from{ opacity:0; transform:translateY(20px); }
+      to  { opacity:1; transform:translateY(0); }
+    }
+
+    /* floating music notes */
+    .note {
+      position:absolute;
+      font-size:28px;
+      pointer-events:none;
+      z-index:3;
+      animation:note-float var(--nd,4s) ease-in-out infinite var(--ndelay,0s);
+      opacity:.8;
+    }
+    @keyframes note-float {
+      0%  { transform:translateY(0)   rotate(0deg);   opacity:.5; }
+      50% { transform:translateY(-30px) rotate(15deg); opacity:1;  }
+      100%{ transform:translateY(0)   rotate(0deg);   opacity:.5; }
+    }
   </style>
 </head>
 <body>
 
 <div id="cur"></div>
-<div id="curR"></div>
 
-<!-- ══ COLLAGE BOARD ══ -->
-<div id="board">
-
-  <!-- LAYER 0 — back, depth 0.15 -->
-  <div class="ph a" data-depth="0.15" data-rot="rotate(2deg)" style="transform:rotate(2deg);">
-    <img src="images/ARIRANG TOUR.jpeg" style="object-position:center 50%;"/>
-    <div class="stk" style="bottom:10px;left:14px;font-size:18px;color:#fff;text-shadow:0 2px 6px rgba(0,0,0,.6);transform:rotate(-1deg);">k-pop is life 🎵</div>
-  </div>
-
-  <div class="ph b" data-depth="0.15" data-rot="rotate(-1.5deg)" style="transform:rotate(-1.5deg);">
-    <img src="images/IMG_1774.JPG" style="object-position:center 55%;"/>
-    <div class="stk" style="bottom:10px;left:14px;font-size:19px;color:#f2e8d8;text-shadow:0 2px 6px rgba(0,0,0,.5);transform:rotate(1deg);">melbourne nights 🌙</div>
-  </div>
-
-  <!-- LAYER 1 — mid-back, depth 0.35 -->
-  <div class="ph c" data-depth="0.35" data-rot="rotate(-6deg)" style="transform:rotate(-6deg);">
-    <img src="images/IMG_1693.JPG" style="object-position:center 12%;"/>
-  </div>
-
-  <div class="ph d" data-depth="0.35" data-rot="rotate(3deg)" style="transform:rotate(3deg);">
-    <img src="images/IMG_2337.JPG" style="object-position:center 25%;"/>
-    <div class="stk" style="top:10px;right:10px;font-size:14px;color:#fff;text-shadow:0 2px 5px rgba(0,0,0,.5);">take me there ✈️</div>
-  </div>
-
-  <!-- LAYER 2 — mid (depth 0.55) -->
-  <div class="ph e" data-depth="0.55" data-rot="rotate(-2deg)" style="transform:rotate(-2deg);">
-    <img src="images/IMG_2095.JPG" style="object-position:center 38%;"/>
-  </div>
-
-  <div class="ph f pol" data-depth="0.55" data-rot="rotate(5deg)" style="transform:rotate(5deg);">
-    <img src="images/reading with music _.jpeg" style="object-position:center 35%;"/>
-    <div class="stk" style="bottom:-16px;left:0;right:0;text-align:center;font-size:13px;color:#2a1f14;">currently reading 📖</div>
-  </div>
-
-  <!-- LAYER 3 — front (depth 0.85) -->
-  <div class="ph g pol" data-depth="0.85" data-rot="rotate(-7deg)" style="transform:rotate(-7deg);">
-    <img src="images/IMG_1910.JPG" style="object-position:center 14%;"/>
-  </div>
-
-  <div class="ph h pol" data-depth="0.85" data-rot="rotate(6deg)" style="transform:rotate(6deg);">
-    <img src="images/IMG_1694.JPG"/>
-  </div>
-
-  <div class="ph i" data-depth="0.85" data-rot="rotate(4deg)" style="transform:rotate(4deg);">
-    <img src="images/IMG_1954.jpg" style="object-position:center 12%;"/>
-  </div>
-
-  <!-- big decorative text — like "Fleurs d'Amour" -->
-  <div id="bigtext" data-depth="0.45" data-rot="rotate(0deg)" style="transform:rotate(0deg);">
-    vision board.
-  </div>
-
-  <!-- floating icons -->
-  <div class="fi" style="top:16%;left:22%;animation-delay:0s;">🎶</div>
-  <div class="fi" style="bottom:26%;right:18%;animation-delay:1.3s;animation-duration:6s;">📚</div>
-  <div class="fi" style="top:50%;left:7%;animation-delay:0.8s;animation-duration:7s;font-size:14px;">♪</div>
-  <div class="fi" style="top:8%;left:58%;animation-delay:2s;animation-duration:5.5s;">🎧</div>
-  <div class="fi" style="bottom:38%;left:46%;animation-delay:2.4s;font-size:13px;">✦</div>
-
+<!-- ══ SCREEN 1: LANDING ══ -->
+<div id="landing">
+  <div id="ring"></div>
+  <div id="ring2"></div>
+  <div id="phrase"></div>
+  <p class="hint">click anywhere</p>
 </div>
 
-<!-- veil -->
-<div id="veil"></div>
+<!-- ══ SCREEN 2: DANCE ══ -->
+<div id="dance">
+  <div class="glow"></div>
 
-<!-- name -->
-<div id="nameWrap">
-  <span class="nline"><span class="nword" id="wR">Riya</span></span>
-  <span class="nline"><span class="nword" id="wV">Virdi</span></span>
-</div>
+  <p class="dance-label top">you asked for it!! 🕺</p>
 
-<!-- phrase -->
-<div id="phrase">
-  <div class="ph-age">19 &nbsp;·&nbsp; Melbourne, Australia</div>
-  <p class="ph-text">
-    melbourne girl with a whole world<br/>
-    on her vision board —<br/>
-    <em>somewhere between figuring it out<br/>and having it all planned</em>
-  </p>
-</div>
+  <img id="cat"
+       src="https://media3.giphy.com/media/AheZDLIrOKu2Y/giphy.gif"
+       alt="dancing cat"/>
 
-<!-- scroll hint -->
-<div id="hint">
-  <div class="ln"></div>
-  <div class="tx">scroll</div>
+  <p class="dance-label bot">we're dancing now 😻</p>
+
+  <!-- floating notes -->
+  <div class="note" style="top:12%;left:8%; --nd:3.5s;--ndelay:0s;">🎵</div>
+  <div class="note" style="top:8%; right:10%;--nd:4.2s;--ndelay:.5s;">🎶</div>
+  <div class="note" style="bottom:18%;left:6%; --nd:5s;  --ndelay:.2s;">🎸</div>
+  <div class="note" style="bottom:12%;right:8%;--nd:3.8s;--ndelay:.9s;">🎹</div>
+  <div class="note" style="top:40%;left:3%; --nd:4.6s;--ndelay:.4s;font-size:22px;">♪</div>
+  <div class="note" style="top:35%;right:4%;--nd:3.2s;--ndelay:.7s;font-size:22px;">♫</div>
+  <div class="note" style="bottom:30%;left:20%;--nd:5.2s;--ndelay:1.1s;font-size:18px;">✦</div>
+  <div class="note" style="bottom:28%;right:20%;--nd:4s;  --ndelay:.3s;font-size:18px;">✦</div>
 </div>
 
 <script>
-  /* ── cursor ── */
-  const cur=document.getElementById('cur'),curR=document.getElementById('curR');
-  document.addEventListener('mousemove',e=>{
-    cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px';
-    curR.style.left=e.clientX+'px';curR.style.top=e.clientY+'px';
+  /* cursor */
+  const cur = document.getElementById('cur');
+  document.addEventListener('mousemove', e => {
+    cur.style.left = e.clientX + 'px';
+    cur.style.top  = e.clientY + 'px';
   });
 
-  /* ── elements ── */
-  const board=document.getElementById('board');
-  const veil=document.getElementById('veil');
-  const wR=document.getElementById('wR');
-  const wV=document.getElementById('wV');
-  const phrase=document.getElementById('phrase');
-  const hint=document.getElementById('hint');
-  const photos=[...document.querySelectorAll('[data-depth]')];
-
-  /* ── virtual scroll ── */
-  let tY=0,cY=0;
-  const MAX=window.innerHeight*2.2;
-  window.addEventListener('wheel',e=>{
-    e.preventDefault();
-    tY=Math.max(0,Math.min(MAX,tY+e.deltaY*.88));
-  },{passive:false});
-  let ty0=0;
-  window.addEventListener('touchstart',e=>{ty0=e.touches[0].clientY;},{passive:true});
-  window.addEventListener('touchmove',e=>{
-    e.preventDefault();
-    const d=ty0-e.touches[0].clientY;ty0=e.touches[0].clientY;
-    tY=Math.max(0,Math.min(MAX,tY+d*1.8));
-  },{passive:false});
-
-  /* ── mouse parallax ── */
-  let tmx=0,tmy=0,pmx=0,pmy=0;
-  document.addEventListener('mousemove',e=>{
-    tmx=e.clientX/window.innerWidth-.5;
-    tmy=e.clientY/window.innerHeight-.5;
+  /* build phrase as clickable words */
+  const words = ['click', 'here', 'to', 'dance', 'with', 'me'];
+  const phraseEl = document.getElementById('phrase');
+  words.forEach((w, i) => {
+    const span = document.createElement('span');
+    span.className = 'word';
+    span.textContent = w;
+    phraseEl.appendChild(span);
+    if (i < words.length - 1) phraseEl.appendChild(document.createTextNode(' '));
   });
 
-  /* ── helpers ── */
-  const cl=(v,a,b)=>Math.max(a,Math.min(b,v));
-  const lr=(a,b,t)=>a+(b-a)*t;
-  const eo=t=>1-Math.pow(1-t,3);
-  const pg=(y,s,e)=>cl((y-s)/(e-s),0,1);
-
-  /* ── main loop ── */
-  function tick(){
-    /* smooth mouse */
-    pmx=lr(pmx,tmx,.055);
-    pmy=lr(pmy,tmy,.055);
-
-    /* 3D parallax on each photo */
-    photos.forEach(el=>{
-      const depth=parseFloat(el.dataset.depth);
-      const rot=el.dataset.rot||'rotate(0deg)';
-      const tx=(pmx*depth*55).toFixed(2);
-      const ty=(pmy*depth*38).toFixed(2);
-      el.style.transform=`${rot} translate(${tx}px,${ty}px)`;
-    });
-
-    /* scroll animation */
-    cY=lr(cY,tY,.072);
-    const y=cY,vh=window.innerHeight;
-
-    const cP=eo(pg(y,vh*.12,vh*.95));
-    board.style.filter=`blur(${(cP*22).toFixed(1)}px)`;
-    board.style.opacity=(1-cP*.5).toFixed(3);
-    veil.style.opacity=(cP*.92).toFixed(3);
-
-    const rP=eo(pg(y,vh*.32,vh*.75));
-    wR.style.transform=`translateY(${((1-rP)*112).toFixed(1)}%)`;
-
-    const vP=eo(pg(y,vh*.48,vh*.90));
-    wV.style.transform=`translateY(${((1-vP)*112).toFixed(1)}%)`;
-
-    const pP=eo(pg(y,vh*1.15,vh*1.65));
-    phrase.style.opacity=pP.toFixed(3);
-    phrase.style.transform=`translateX(-50%) translateY(${((1-pP)*26).toFixed(1)}px)`;
-
-    hint.style.opacity=(1-pg(y,0,vh*.2)).toFixed(3);
-
-    requestAnimationFrame(tick);
+  /* scatter tiny stars */
+  const landing = document.getElementById('landing');
+  for (let i = 0; i < 60; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    s.style.cssText = `
+      left:${Math.random()*100}%;
+      top:${Math.random()*100}%;
+      --d:${2+Math.random()*3}s;
+      --delay:${Math.random()*3}s;
+    `;
+    landing.appendChild(s);
   }
-  tick();
+
+  /* click handler */
+  const dance = document.getElementById('dance');
+  let clicked = false;
+
+  landing.addEventListener('click', () => {
+    if (clicked) return;
+    clicked = true;
+
+    /* 1. explode landing */
+    landing.classList.add('explode');
+
+    /* 2. after landing fades, reveal dance screen */
+    setTimeout(() => {
+      landing.style.display = 'none';
+      dance.style.zIndex = '10';
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          dance.classList.add('open');
+        });
+      });
+    }, 480);
+  });
 </script>
 </body>
 </html>

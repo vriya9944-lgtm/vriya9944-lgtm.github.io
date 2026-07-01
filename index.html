@@ -186,9 +186,13 @@
     #after-plane.show #collage-img {
       animation:collage-drop 1.1s cubic-bezier(.22,.68,0,1.2) .3s forwards;
     }
-    #collage-img:hover {
-      transform:perspective(1800px) rotateX(0deg) rotateY(0deg) scale(1.02) !important;
-      animation:none !important;
+    #collage-img.landed {
+      opacity:1;
+      animation:none;
+      transform:perspective(1800px) rotateX(1.5deg) rotateY(-1deg) scale(1.01);
+    }
+    #collage-img.landed:hover {
+      transform:perspective(1800px) rotateX(0deg) rotateY(0deg) scale(1.02);
     }
   </style>
 </head>
@@ -468,6 +472,11 @@
     if (!planeShown && dance.classList.contains('open') && e.deltaY < 0) { goBackToLanding(); return; }
     if (scrollCta.classList.contains('show') && e.deltaY > 0)            { showPortfolio(); }
   }, { passive:true });
+
+  /* lock collage in place after animation so hover can't make it vanish */
+  document.getElementById('collage-img').addEventListener('animationend', function() {
+    this.classList.add('landed');
+  });
 
   /* landing click */
   let clicked = false;

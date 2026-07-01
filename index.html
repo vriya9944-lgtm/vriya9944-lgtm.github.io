@@ -4,7 +4,7 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>riri's portfolio</title>
-  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=DM+Sans:wght@400;500&family=Pinyon+Script&display=swap" rel="stylesheet"/>
   <script src="https://unpkg.com/@lottiefiles/lottie-player@2.0.8/dist/lottie-player.js"></script>
   <style>
     *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
@@ -161,29 +161,72 @@
     /* ── MOODBOARD ── */
     .mb-photo {
       position:absolute; overflow:hidden;
-      box-shadow:0 16px 48px rgba(0,0,0,.85), 0 2px 8px rgba(0,0,0,.4);
+      box-shadow:0 20px 60px rgba(0,0,0,.9), 0 4px 12px rgba(0,0,0,.5);
     }
     .mb-photo img { width:100%; height:100%; object-fit:cover; display:block; }
 
-    .mb-p1 { width:22vw; height:38vh; left:2%;   top:3%;    transform:rotate(3deg);   }
-    .mb-p2 { width:27vw; height:63vh; left:34%;  top:7%;    transform:rotate(-1.5deg);}
-    .mb-p3 { width:25vw; height:30vh; right:2%;  top:3%;    transform:rotate(-2.5deg);}
-    .mb-p4 { width:22vw; height:20vh; right:2%;  top:36%;   transform:rotate(2deg);   }
-    .mb-p5 { width:21vw; height:20vh; right:3%;  top:57%;   transform:rotate(-1.5deg);}
-    .mb-p6 { width:22vw; height:21vh; right:2%;  top:78%;   transform:rotate(1.5deg); }
-    .mb-p7 { width:23vw; height:38vh; left:3%;   bottom:3%; transform:rotate(-3.5deg);}
+    /* LEFT COLUMN */
+    .mb-p1 { /* B&W mirror selfie – top left */
+      left:1%; top:2%; width:23vw; height:44vh;
+      transform:rotate(2deg);
+    }
+    .mb-p7 { /* pier sunset – bottom left */
+      left:2%; bottom:2%; width:22vw; height:40vh;
+      transform:rotate(-3deg);
+    }
 
+    /* CENTER HERO */
+    .mb-p2 { /* jewelry selfie – tall center */
+      left:25%; top:2%; width:28vw; height:94vh;
+      transform:rotate(-1deg);
+    }
+
+    /* RIGHT COLUMN */
+    .mb-p3 { /* park – top right */
+      right:1%; top:2%; width:26vw; height:28vh;
+      transform:rotate(-2deg);
+    }
+    .mb-p4 { /* concert – right mid */
+      right:1%; top:32%; width:25vw; height:20vh;
+      transform:rotate(1.5deg);
+    }
+    .mb-p5 { /* church – right lower */
+      right:2%; top:54%; width:24vw; height:20vh;
+      transform:rotate(-1.5deg);
+    }
+    .mb-p6 { /* field selfie – right bottom */
+      right:1%; top:76%; width:25vw; height:21vh;
+      transform:rotate(1deg);
+    }
+
+    /* TEXT OVERLAYS */
     .mb-text {
-      position:absolute; font-family:'Caveat',cursive; font-weight:700;
-      pointer-events:none; user-select:none;
+      position:absolute; pointer-events:none; user-select:none;
     }
     .mb-title {
-      font-size:clamp(44px,5.5vw,82px); color:rgba(255,255,255,.88);
-      left:4%; top:44%; transform:rotate(-6deg); line-height:1;
+      font-family:'Pinyon Script',cursive;
+      font-size:clamp(52px,7.5vw,110px);
+      color:rgba(255,255,255,.82);
+      left:-1%; top:40%;
+      transform:rotate(-13deg);
+      line-height:1.1;
+      white-space:nowrap;
+    }
+    .mb-script {
+      font-family:'Caveat',cursive; font-weight:700;
+      font-size:clamp(11px,1.3vw,18px);
+      color:rgba(255,255,255,.35);
+      right:28%; top:35%;
+      transform:rotate(5deg);
+      line-height:1.6;
     }
     .mb-quote {
-      font-size:clamp(13px,1.4vw,20px); color:rgba(255,255,255,.38);
-      left:5%; bottom:7%; transform:rotate(-2deg); white-space:nowrap;
+      font-family:'Caveat',cursive; font-weight:700;
+      font-size:clamp(12px,1.4vw,20px);
+      color:rgba(255,255,255,.38);
+      left:26%; bottom:3%;
+      transform:rotate(-2deg);
+      white-space:nowrap;
     }
   </style>
 </head>
@@ -231,15 +274,16 @@
   </div>
 
   <div id="after-plane">
-    <div class="mb-photo mb-p1"><img src="images/IMG_1975.jpg"         alt=""></div>
-    <div class="mb-photo mb-p2"><img src="images/IMG_0636.JPG"         alt=""></div>
-    <div class="mb-photo mb-p3"><img src="images/IMG_2337.JPG"         alt=""></div>
-    <div class="mb-photo mb-p4"><img src="images/ARIRANG%20TOUR.jpeg"  alt=""></div>
-    <div class="mb-photo mb-p5"><img src="images/IMG_1666.JPG"         alt=""></div>
-    <div class="mb-photo mb-p6"><img src="images/IMG_1693.JPG"         alt=""></div>
-    <div class="mb-photo mb-p7"><img src="images/IMG_2135.JPG"         alt=""></div>
-    <p class="mb-text mb-title">riri</p>
-    <p class="mb-text mb-quote">take me somewhere beautiful ✨</p>
+    <div class="mb-photo mb-p1"><img src="images/IMG_1975.jpg"        alt=""></div>
+    <div class="mb-photo mb-p7"><img src="images/IMG_2135.JPG"        alt=""></div>
+    <div class="mb-photo mb-p2"><img src="images/IMG_0636.JPG"        alt=""></div>
+    <div class="mb-photo mb-p3"><img src="images/IMG_2337.JPG"        alt=""></div>
+    <div class="mb-photo mb-p4"><img src="images/ARIRANG%20TOUR.jpeg" alt=""></div>
+    <div class="mb-photo mb-p5"><img src="images/IMG_1666.JPG"        alt=""></div>
+    <div class="mb-photo mb-p6"><img src="images/IMG_1693.JPG"        alt=""></div>
+    <p class="mb-text mb-title">fleurs<br>d'amour</p>
+    <p class="mb-text mb-script">the sun hits<br>the flowers<br>just right</p>
+    <p class="mb-text mb-quote">take time to do what makes your soul happy ✨</p>
   </div>
 </div>
 

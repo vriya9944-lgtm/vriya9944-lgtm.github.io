@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>riri's portfolio</title>
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"/>
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@2.0.8/dist/lottie-player.js"></script>
   <style>
     *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
     body { background:#000; overflow:hidden; cursor:none; font-family:'DM Sans',sans-serif; }
@@ -140,6 +141,14 @@
       position:absolute; inset:0;
       width:100%; height:100%;
       transition:opacity .8s ease;
+      pointer-events:none;
+    }
+
+    #lottie-plane {
+      position:fixed;
+      width:520px; height:520px;
+      pointer-events:none; z-index:9;
+      opacity:0; transition:opacity .4s ease;
     }
 
     #after-plane {
@@ -186,33 +195,16 @@
 <div id="portfolio">
   <svg id="flight-svg" xmlns="http://www.w3.org/2000/svg"
        viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice">
-
-    <!-- Route: top-left → smooth bezier → loop-the-loop → bottom-right -->
-    <!-- Entry arrives at loop-left going DOWN (CCW arc starts DOWN) — perfectly smooth -->
     <path id="flight-path"
-      d="M 55,50 C 150,50 550,200 550,400 A 150,150 0 0,0 850,400 A 150,150 0 0,0 550,400 C 550,600 1200,760 1385,760"
+      d="M 55,760 C 200,760 550,600 550,400 A 150,150 0 0,0 850,400 A 150,150 0 0,0 550,400 C 550,200 1200,50 1385,50"
       fill="none" stroke="#FF1493" stroke-width="6"
       stroke-dasharray="72 22" stroke-linecap="butt" opacity="0"/>
-
-    <!-- Paper plane — folded paper look, super big -->
-    <g id="plane-group" opacity="0">
-      <!-- Bottom wing (hot pink) -->
-      <polygon points="220,0 -90,0 -110,148" fill="#FF1493"/>
-      <!-- Top wing (light pink) -->
-      <polygon points="220,0 -90,0 -110,-148" fill="#ffaad4"/>
-      <!-- Inner fold highlight (very light) -->
-      <polygon points="220,0 -90,0 -25,-72" fill="#ffd6ec"/>
-      <!-- Outline stroke -->
-      <polygon points="220,0 -110,-148 -90,0 -110,148"
-        fill="none" stroke="#b0004d" stroke-width="5" stroke-linejoin="round"/>
-      <!-- Center fold line -->
-      <line x1="-90" y1="0" x2="220" y2="0" stroke="#b0004d" stroke-width="4"/>
-      <!-- Inner crease -->
-      <line x1="-25" y1="-72" x2="220" y2="0" stroke="#d45090" stroke-width="2.5" stroke-linecap="round"/>
-    </g>
   </svg>
 
-  <!-- placeholder for next content — user will define later -->
+  <div id="lottie-plane">
+    <lottie-player src="plane.json" background="transparent" speed="1" loop autoplay></lottie-player>
+  </div>
+
   <div id="after-plane"></div>
 </div>
 
@@ -346,10 +338,16 @@
   const portfolio   = document.getElementById('portfolio');
   const flightSvg   = document.getElementById('flight-svg');
   const flightPath  = document.getElementById('flight-path');
-  const planeGroup  = document.getElementById('plane-group');
+  const lottiePlane = document.getElementById('lottie-plane');
   const afterPlane  = document.getElementById('after-plane');
   let planeShown    = false;
   let animActive    = false;
+
+  function svgToScreen(svgX, svgY) {
+    const pt = flightSvg.createSVGPoint();
+    pt.x = svgX; pt.y = svgY;
+    return pt.matrixTransform(flightSvg.getScreenCTM());
+  }
 
   function showPortfolio() {
     if (planeShown) return; planeShown = true;
@@ -372,8 +370,8 @@
     setTimeout(() => {
       portfolio.classList.remove('visible');
       flightPath.style.transition = ''; flightPath.style.opacity = '0';
-      planeGroup.style.opacity = '0';
-      planeGroup.setAttribute('transform', '');
+      lottiePlane.style.opacity = '0';
+      lottiePlane.style.transform = '';
       flightSvg.style.opacity = '1';
       afterPlane.classList.remove('show');
       planeShown = false;
@@ -403,9 +401,9 @@
 
     setTimeout(() => {
       if (!animActive) return;
-      planeGroup.style.opacity = '1';
+      lottiePlane.style.opacity = '1';
       const start = performance.now();
-      const dur   = 3800;
+      const dur   = 4200;
 
       (function frame(now) {
         if (!animActive) return;
@@ -413,13 +411,17 @@
         const eased  = t < .5 ? 2*t*t : -1+(4-2*t)*t;
         const dist   = eased * totalLen;
         const pt     = flightPath.getPointAtLength(dist);
-        const ptNext = flightPath.getPointAtLength(Math.min(dist + 8, totalLen));
+        const ptNext = flightPath.getPointAtLength(Math.min(dist + 10, totalLen));
         const angle  = Math.atan2(ptNext.y - pt.y, ptNext.x - pt.x) * 180 / Math.PI;
-        planeGroup.setAttribute('transform', `translate(${pt.x},${pt.y}) rotate(${angle})`);
+        const sc     = svgToScreen(pt.x, pt.y);
+        lottiePlane.style.left = sc.x + 'px';
+        lottiePlane.style.top  = sc.y + 'px';
+        lottiePlane.style.transform = `translate(-50%,-50%) rotate(${angle}deg)`;
         if (t < 1) {
           requestAnimationFrame(frame);
         } else {
-          flightSvg.style.opacity = '0';
+          flightSvg.style.opacity  = '0';
+          lottiePlane.style.opacity = '0';
           setTimeout(() => afterPlane.classList.add('show'), 900);
         }
       })(start);

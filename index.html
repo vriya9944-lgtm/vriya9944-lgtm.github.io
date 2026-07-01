@@ -11,118 +11,110 @@
     html, body {
       width:100%; height:100%;
       overflow:hidden;
-      background:#0e0c0a;
+      /* warm parchment — Fleurs d'Amour background */
+      background:#f0e6d2;
       font-family:'DM Sans',sans-serif;
       cursor:none;
     }
 
-    #cur  { position:fixed;width:9px;height:9px;background:#fff;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:difference; }
-    #curR { position:fixed;width:30px;height:30px;border:1px solid rgba(201,169,110,.5);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:left .08s,top .08s; }
+    #cur  { position:fixed;width:8px;height:8px;background:#2a1f14;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%); }
+    #curR { position:fixed;width:28px;height:28px;border:1.5px solid rgba(42,31,20,.35);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:left .1s,top .1s; }
 
-    /* ════════════════════════════════════════════
-       COLLAGE
-       5-column mosaic, Summer Nights structure:
-       - col1: full-height portrait (like dancing girl)
-       - col3: DOMINANT full-height centre (like reading girl)
-       - everything fills in around those two anchors
-    ════════════════════════════════════════════ */
-    #collage {
+    /* ═══════════════════════════════════════════
+       COLLAGE — Fleurs d'Amour style
+       Cream background + scattered photos at angles
+       3D mouse parallax: each photo has data-depth
+       (0 = far / barely moves, 1 = close / moves a lot)
+    ═══════════════════════════════════════════ */
+    #board {
       position:fixed;
       inset:0;
-      display:grid;
-      grid-template-columns: 17fr 21fr 24fr 22fr 16fr;
-      grid-template-rows:    42fr 32fr 26fr;
-      gap:0;
       will-change:filter,opacity;
     }
 
-    .gi {
+    .ph {
+      position:absolute;
       overflow:hidden;
-      position:relative;
+      will-change:transform;
     }
-    .gi img {
+    .ph img {
       width:100%; height:100%;
       object-fit:cover;
       object-position:center;
       display:block;
     }
 
-    /* ── grid placements ── */
-    .g1 { grid-column:1/2;  grid-row:1/3;  }   /* tall portrait LEFT, rows 1-2     */
-    .g2 { grid-column:2/3;  grid-row:1/2;  }   /* small top left-centre             */
-    .g3 { grid-column:3/4;  grid-row:1/4;  }   /* DOMINANT centre, full height      */
-    .g4 { grid-column:4/6;  grid-row:1/2;  }   /* wide landscape top right          */
-    .g5 { grid-column:2/3;  grid-row:2/3;  }   /* mid left-centre                   */
-    .g6 { grid-column:4/5;  grid-row:2/3;  }   /* mid right                         */
-    .g7 { grid-column:5/6;  grid-row:2/4;  }   /* portrait right, rows 2-3          */
-    .g8 { grid-column:1/3;  grid-row:3/4;  }   /* wide landscape bottom left        */
-    .g9 { grid-column:4/5;  grid-row:3/4;  }   /* small bottom right                */
+    /* polaroid border */
+    .pol {
+      background:#fff;
+      padding:6px 6px 20px;
+      box-shadow:0 6px 22px rgba(42,31,20,.18), 0 1px 4px rgba(42,31,20,.12);
+    }
+    /* borderless shadow */
+    .ph:not(.pol) {
+      box-shadow:0 4px 20px rgba(42,31,20,.22);
+    }
 
-    /* ── stickers (Summer Nights / Fleurs d'Amour style) ── */
-    .lbl {
+    /* ── photo positions & base rotations ── */
+
+    /* LAYER 0 — back (depth 0.15) */
+    .a { width:54vw;height:40vh; top:-3vh; left:18vw; }        /* wide top — concert   */
+    .b { width:60vw;height:34vh; bottom:-3vh; left:5vw; }      /* wide bottom — lights */
+
+    /* LAYER 1 — mid-back (depth 0.35) */
+    .c { width:30vw;height:56vh; top:6vh;  left:-3vw; }        /* left portrait        */
+    .d { width:28vw;height:32vh; bottom:8vh; right:4vw; }      /* btm right            */
+
+    /* LAYER 2 — mid (depth 0.55) */
+    .e { width:44vw;height:62vh; top:8vh;  left:26vw; }        /* HERO — centre        */
+    .f { width:26vw;height:32vh; bottom:6vh; left:30vw; }      /* reading — overlap    */
+
+    /* LAYER 3 — front (depth 0.85) */
+    .g { width:22vw;height:30vh; top:3vh;  right:3vw; }        /* top right polaroid   */
+    .h { width:20vw;height:24vh; top:36vh; left:12vw; }        /* mid left small pol   */
+    .i { width:24vw;height:38vh; top:14vh; right:4vw; }        /* right portrait       */
+
+    /* ── big decorative text (Fleurs d'Amour style) ── */
+    #bigtext {
+      position:absolute;
+      bottom:11vh; left:1vw;
+      font-family:'Playfair Display',serif;
+      font-size:clamp(48px,8vw,100px);
+      font-weight:700;
+      font-style:italic;
+      color:#2a1f14;
+      line-height:1;
+      pointer-events:none;
+      z-index:6;
+      will-change:transform;
+      opacity:.88;
+      letter-spacing:-2px;
+    }
+
+    /* ── handwritten stickers ── */
+    .stk {
       position:absolute;
       font-family:'Caveat',cursive;
       font-weight:700;
-      color:#fff;
-      text-shadow:0 2px 8px rgba(0,0,0,.55);
       pointer-events:none;
       line-height:1.2;
       z-index:2;
     }
-    /* cream box sticker — like "SUMMER NIGHTS." label */
-    .lbl.box {
-      background:rgba(242,232,215,.93);
-      color:#1a1208;
-      text-shadow:none;
-      padding:5px 12px 7px;
-    }
-    /* dark chip sticker — like "DISCOVER A NEW WORLD DOWN YOUR PHONE" */
-    .lbl.chip {
-      background:rgba(15,12,8,.82);
-      color:#f2e8d8;
-      text-shadow:none;
-      padding:5px 10px 6px;
-      font-size:13px;
-      letter-spacing:.5px;
-    }
-    /* "MEMORIES MAKE ME SMILE" plate style */
-    .lbl.plate {
-      background:#fff;
-      color:#1a1208;
-      text-shadow:none;
-      border:2px solid #1a1208;
-      padding:4px 10px 5px;
-      font-family:'DM Sans',sans-serif;
-      font-size:12px;
-      font-weight:700;
-      letter-spacing:2px;
-      text-transform:uppercase;
-    }
-
-    /* ── polaroid accent photos (floating on top) ── */
-    .acc {
-      position:fixed;
-      background:#fff;
-      padding:5px 5px 18px;
-      box-shadow:0 6px 24px rgba(0,0,0,.38);
-      z-index:6;
-      overflow:hidden;
-    }
-    .acc img { width:100%;height:100%;object-fit:cover;display:block; }
 
     /* ── floating icons ── */
     .fi {
-      position:fixed;font-size:20px;
-      pointer-events:none;z-index:7;
+      position:absolute;
+      font-size:18px;
+      pointer-events:none;
+      z-index:9;
       animation:flt 5s ease-in-out infinite;
-      filter:drop-shadow(0 2px 4px rgba(0,0,0,.4));
     }
     @keyframes flt {
       0%,100%{ transform:translateY(0) rotate(0deg); }
-      50%    { transform:translateY(-10px) rotate(7deg); }
+      50%    { transform:translateY(-10px) rotate(8deg); }
     }
 
-    /* ══ VEIL ══ */
+    /* ══ VEIL (dark fade for scroll reveal) ══ */
     #veil {
       position:fixed;inset:0;
       background:#0a0806;
@@ -145,7 +137,7 @@
       display:inline-block;
       font-family:'Playfair Display',serif;
       font-weight:700;
-      font-size:clamp(80px,14vw,160px);
+      font-size:clamp(82px,14vw,162px);
       color:#f2e8d8;
       letter-spacing:-3px;
       transform:translateY(112%);
@@ -181,8 +173,8 @@
       transform:translateX(-50%);z-index:20;
       display:flex;flex-direction:column;align-items:center;gap:8px;
     }
-    #hint .ln { width:1px;height:36px;background:linear-gradient(to bottom,rgba(200,180,140,.7),transparent);animation:lp 2s ease-in-out infinite; }
-    #hint .tx { font-size:8px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:rgba(200,180,140,.45); }
+    #hint .ln { width:1px;height:36px;background:linear-gradient(to bottom,rgba(42,31,20,.5),transparent);animation:lp 2s ease-in-out infinite; }
+    #hint .tx { font-size:8px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:rgba(42,31,20,.35); }
     @keyframes lp { 0%,100%{opacity:.3}50%{opacity:1} }
   </style>
 </head>
@@ -191,77 +183,66 @@
 <div id="cur"></div>
 <div id="curR"></div>
 
-<!-- ══ COLLAGE ══ -->
-<div id="collage">
+<!-- ══ COLLAGE BOARD ══ -->
+<div id="board">
 
-  <!-- g1: full-height left — like the dancing girl in Summer Nights -->
-  <div class="gi g1">
+  <!-- LAYER 0 — back, depth 0.15 -->
+  <div class="ph a" data-depth="0.15" data-rot="rotate(2deg)" style="transform:rotate(2deg);">
+    <img src="images/ARIRANG TOUR.jpeg" style="object-position:center 50%;"/>
+    <div class="stk" style="bottom:10px;left:14px;font-size:18px;color:#fff;text-shadow:0 2px 6px rgba(0,0,0,.6);transform:rotate(-1deg);">k-pop is life 🎵</div>
+  </div>
+
+  <div class="ph b" data-depth="0.15" data-rot="rotate(-1.5deg)" style="transform:rotate(-1.5deg);">
+    <img src="images/IMG_1774.JPG" style="object-position:center 55%;"/>
+    <div class="stk" style="bottom:10px;left:14px;font-size:19px;color:#f2e8d8;text-shadow:0 2px 6px rgba(0,0,0,.5);transform:rotate(1deg);">melbourne nights 🌙</div>
+  </div>
+
+  <!-- LAYER 1 — mid-back, depth 0.35 -->
+  <div class="ph c" data-depth="0.35" data-rot="rotate(-6deg)" style="transform:rotate(-6deg);">
     <img src="images/IMG_1693.JPG" style="object-position:center 12%;"/>
   </div>
 
-  <!-- g2: small top cell — like the vinyl record / swing area -->
-  <div class="gi g2">
-    <img src="images/IMG_2335.JPG" style="object-position:center 40%;"/>
-    <div class="lbl" style="bottom:10px;left:10px;font-size:15px;transform:rotate(-2deg);">golden hour ✨</div>
+  <div class="ph d" data-depth="0.35" data-rot="rotate(3deg)" style="transform:rotate(3deg);">
+    <img src="images/IMG_2337.JPG" style="object-position:center 25%;"/>
+    <div class="stk" style="top:10px;right:10px;font-size:14px;color:#fff;text-shadow:0 2px 5px rgba(0,0,0,.5);">take me there ✈️</div>
   </div>
 
-  <!-- g3: DOMINANT centre — like the reading girl, full height, all eyes go here -->
-  <div class="gi g3">
+  <!-- LAYER 2 — mid (depth 0.55) -->
+  <div class="ph e" data-depth="0.55" data-rot="rotate(-2deg)" style="transform:rotate(-2deg);">
     <img src="images/IMG_2095.JPG" style="object-position:center 38%;"/>
   </div>
 
-  <!-- g4: wide top right — like the park/swing landscape -->
-  <div class="gi g4">
-    <img src="images/ARIRANG TOUR.jpeg" style="object-position:center 50%;"/>
-    <div class="lbl box" style="bottom:14px;left:16px;font-size:20px;transform:rotate(-1deg);">k-pop is life. 🎵</div>
-  </div>
-
-  <!-- g5: mid left-centre — like the cat / strawberries -->
-  <div class="gi g5">
+  <div class="ph f pol" data-depth="0.55" data-rot="rotate(5deg)" style="transform:rotate(5deg);">
     <img src="images/reading with music _.jpeg" style="object-position:center 35%;"/>
-    <div class="lbl chip" style="bottom:10px;left:10px;">currently reading 📖</div>
+    <div class="stk" style="bottom:-16px;left:0;right:0;text-align:center;font-size:13px;color:#2a1f14;">currently reading 📖</div>
   </div>
 
-  <!-- g6: mid right — like the hat girl -->
-  <div class="gi g6">
-    <img src="images/IMG_2337.JPG" style="object-position:center 25%;"/>
-    <div class="lbl" style="top:10px;right:10px;font-size:14px;">take me there ✈️</div>
+  <!-- LAYER 3 — front (depth 0.85) -->
+  <div class="ph g pol" data-depth="0.85" data-rot="rotate(-7deg)" style="transform:rotate(-7deg);">
+    <img src="images/IMG_1910.JPG" style="object-position:center 14%;"/>
   </div>
 
-  <!-- g7: portrait right, rows 2-3 — like Converse / memories shot -->
-  <div class="gi g7">
+  <div class="ph h pol" data-depth="0.85" data-rot="rotate(6deg)" style="transform:rotate(6deg);">
+    <img src="images/IMG_1694.JPG"/>
+  </div>
+
+  <div class="ph i" data-depth="0.85" data-rot="rotate(4deg)" style="transform:rotate(4deg);">
     <img src="images/IMG_1954.jpg" style="object-position:center 12%;"/>
-    <div class="lbl plate" style="bottom:12px;left:50%;transform:translateX(-50%);white-space:nowrap;">GOOD TIMES</div>
   </div>
 
-  <!-- g8: wide bottom left — like the waffles / food wide shot -->
-  <div class="gi g8">
-    <img src="images/IMG_1774.JPG" style="object-position:center 55%;"/>
-    <div class="lbl box" style="bottom:14px;left:16px;font-size:20px;transform:rotate(-1deg);">melbourne nights. 🌙</div>
+  <!-- big decorative text — like "Fleurs d'Amour" -->
+  <div id="bigtext" data-depth="0.45" data-rot="rotate(0deg)" style="transform:rotate(0deg);">
+    vision board.
   </div>
 
-  <!-- g9: small bottom right — like the pizza shot -->
-  <div class="gi g9">
-    <img src="images/IMG_2026.JPG" style="object-position:center 30%;"/>
-    <div class="lbl chip" style="bottom:10px;right:10px;">discover melbourne</div>
-  </div>
+  <!-- floating icons -->
+  <div class="fi" style="top:16%;left:22%;animation-delay:0s;">🎶</div>
+  <div class="fi" style="bottom:26%;right:18%;animation-delay:1.3s;animation-duration:6s;">📚</div>
+  <div class="fi" style="top:50%;left:7%;animation-delay:0.8s;animation-duration:7s;font-size:14px;">♪</div>
+  <div class="fi" style="top:8%;left:58%;animation-delay:2s;animation-duration:5.5s;">🎧</div>
+  <div class="fi" style="bottom:38%;left:46%;animation-delay:2.4s;font-size:13px;">✦</div>
 
 </div>
-
-<!-- ── polaroid accents (Fleurs d'Amour scattered feel) ── -->
-<div class="acc" style="top:24%;left:16%;width:15vw;height:20vh;transform:rotate(-7deg);z-index:6;">
-  <img src="images/IMG_1910.JPG" style="object-position:center 12%;"/>
-</div>
-<div class="acc" style="bottom:18%;left:32%;width:13vw;height:17vh;transform:rotate(6deg);z-index:6;">
-  <img src="images/IMG_1694.JPG"/>
-</div>
-
-<!-- floating icons -->
-<div class="fi" style="top:16%;left:20%;animation-delay:0s;">🎶</div>
-<div class="fi" style="bottom:24%;right:16%;animation-delay:1.3s;animation-duration:6s;">📚</div>
-<div class="fi" style="top:52%;left:6%;animation-delay:0.7s;animation-duration:7s;font-size:14px;">♪</div>
-<div class="fi" style="top:8%;left:56%;animation-delay:1.9s;animation-duration:5.5s;">🎧</div>
-<div class="fi" style="bottom:32%;left:44%;animation-delay:2.2s;font-size:13px;">✦</div>
 
 <!-- veil -->
 <div id="veil"></div>
@@ -289,27 +270,29 @@
 </div>
 
 <script>
+  /* ── cursor ── */
   const cur=document.getElementById('cur'),curR=document.getElementById('curR');
   document.addEventListener('mousemove',e=>{
     cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px';
     curR.style.left=e.clientX+'px';curR.style.top=e.clientY+'px';
   });
 
-  const collage=document.getElementById('collage');
+  /* ── elements ── */
+  const board=document.getElementById('board');
   const veil=document.getElementById('veil');
   const wR=document.getElementById('wR');
   const wV=document.getElementById('wV');
   const phrase=document.getElementById('phrase');
   const hint=document.getElementById('hint');
+  const photos=[...document.querySelectorAll('[data-depth]')];
 
+  /* ── virtual scroll ── */
   let tY=0,cY=0;
   const MAX=window.innerHeight*2.2;
-
   window.addEventListener('wheel',e=>{
     e.preventDefault();
     tY=Math.max(0,Math.min(MAX,tY+e.deltaY*.88));
   },{passive:false});
-
   let ty0=0;
   window.addEventListener('touchstart',e=>{ty0=e.touches[0].clientY;},{passive:true});
   window.addEventListener('touchmove',e=>{
@@ -318,18 +301,41 @@
     tY=Math.max(0,Math.min(MAX,tY+d*1.8));
   },{passive:false});
 
+  /* ── mouse parallax ── */
+  let tmx=0,tmy=0,pmx=0,pmy=0;
+  document.addEventListener('mousemove',e=>{
+    tmx=e.clientX/window.innerWidth-.5;
+    tmy=e.clientY/window.innerHeight-.5;
+  });
+
+  /* ── helpers ── */
   const cl=(v,a,b)=>Math.max(a,Math.min(b,v));
   const lr=(a,b,t)=>a+(b-a)*t;
   const eo=t=>1-Math.pow(1-t,3);
   const pg=(y,s,e)=>cl((y-s)/(e-s),0,1);
 
+  /* ── main loop ── */
   function tick(){
+    /* smooth mouse */
+    pmx=lr(pmx,tmx,.055);
+    pmy=lr(pmy,tmy,.055);
+
+    /* 3D parallax on each photo */
+    photos.forEach(el=>{
+      const depth=parseFloat(el.dataset.depth);
+      const rot=el.dataset.rot||'rotate(0deg)';
+      const tx=(pmx*depth*55).toFixed(2);
+      const ty=(pmy*depth*38).toFixed(2);
+      el.style.transform=`${rot} translate(${tx}px,${ty}px)`;
+    });
+
+    /* scroll animation */
     cY=lr(cY,tY,.072);
     const y=cY,vh=window.innerHeight;
 
     const cP=eo(pg(y,vh*.12,vh*.95));
-    collage.style.filter=`blur(${(cP*22).toFixed(1)}px)`;
-    collage.style.opacity=(1-cP*.5).toFixed(3);
+    board.style.filter=`blur(${(cP*22).toFixed(1)}px)`;
+    board.style.opacity=(1-cP*.5).toFixed(3);
     veil.style.opacity=(cP*.92).toFixed(3);
 
     const rP=eo(pg(y,vh*.32,vh*.75));

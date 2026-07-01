@@ -220,7 +220,7 @@
   });
 
   /* landing phrase */
-  const words = ['click','here','to','riri\'s','portfolio'];
+  const words = ['click','here','to','dance','with','me'];
   const phraseEl = document.getElementById('phrase');
   words.forEach((w, i) => {
     const s = document.createElement('span');
@@ -313,11 +313,18 @@
   /* video ended → run text sequence */
   catVid.addEventListener('ended', runSequence);
 
-  /* click cat → pop animation then replay */
+  /* click cat → pop + replay; 3rd click fast-forwards to scroll */
+  let catClicks = 0;
   catOverlay.addEventListener('click', () => {
+    catClicks++;
+    if (catClicks >= 3) {
+      clearSeq();
+      scrollCta.classList.add('show');
+      return;
+    }
     clearSeq();
     catWrap.classList.remove('popping');
-    void catWrap.offsetWidth; /* reflow to restart animation */
+    void catWrap.offsetWidth;
     catWrap.classList.add('popping');
     catWrap.addEventListener('animationend', () => {
       catWrap.classList.remove('popping');
@@ -373,6 +380,7 @@
       dance.style.transition = ''; dance.style.opacity = ''; dance.style.zIndex = '10';
       landing.style.display = '';
       catWrap.classList.remove('popping');
+      catClicks = 0;
       clicked = false;
     }, 500);
   }

@@ -123,8 +123,33 @@
     #scroll-cta {
       bottom:28px; left:50%; transform:translateX(-50%);
       font-size:clamp(18px,2.5vw,28px); color:#ffda79;
-      white-space:nowrap; text-align:center;
+      white-space:nowrap; text-align:center; cursor:none;
     }
+
+    /* ── PORTFOLIO / PLANE SECTION ── */
+    #portfolio {
+      position:fixed; inset:0;
+      background:#000; z-index:8;
+      display:none; align-items:center; justify-content:center;
+      opacity:0; transition:opacity .6s ease;
+    }
+    #portfolio.visible { display:flex; }
+    #portfolio.faded-in { opacity:1; }
+
+    #flight-svg {
+      position:absolute; inset:0;
+      width:100%; height:100%;
+      transition:opacity .8s ease;
+    }
+
+    #after-plane {
+      position:relative; z-index:2;
+      opacity:0; transition:opacity .8s ease;
+      color:#fff; text-align:center;
+      font-family:'Caveat',cursive; font-size:clamp(28px,5vw,64px);
+      font-weight:700;
+    }
+    #after-plane.show { opacity:1; }
   </style>
 </head>
 <body>
@@ -156,6 +181,32 @@
   <span class="look-down">look down</span>
 </div>
 <div id="scroll-cta" class="seq-text">scroll</div>
+
+<!-- PORTFOLIO / PLANE SECTION -->
+<div id="portfolio">
+  <svg id="flight-svg" xmlns="http://www.w3.org/2000/svg"
+       viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice">
+
+    <!-- Jagged dashed route: bottom-left → top-right -->
+    <path id="flight-path"
+      d="M 55,790 L 105,670 L 55,590 L 240,470 L 185,400
+         L 400,290 L 345,225 L 580,130 L 525,80
+         L 790,45 L 1060,75 L 1360,18"
+      fill="none" stroke="#FF1493" stroke-width="3"
+      stroke-dasharray="16 10" stroke-linecap="round" opacity="0"/>
+
+    <!-- Hot pink paper plane (points right, rotated along path) -->
+    <g id="plane-group" opacity="0">
+      <polygon points="22,0 -10,-11 -2,0" fill="#ff85c8"/>
+      <polygon points="22,0 -10,-11 -10,0" fill="#FF1493"/>
+      <polygon points="22,0 -10,11  -2,0" fill="#e8006e"/>
+      <polygon points="22,0 -10,11  -10,0" fill="#FF1493"/>
+    </g>
+  </svg>
+
+  <!-- placeholder for next content — user will define later -->
+  <div id="after-plane"></div>
+</div>
 
 <!-- audio-only YouTube, hidden off-screen -->
 <iframe id="yt-audio"
@@ -275,6 +326,71 @@
       startDance();
     }, {once: true});
   });
+
+  /* ── PORTFOLIO / PLANE ANIMATION ── */
+  const portfolio   = document.getElementById('portfolio');
+  const flightSvg   = document.getElementById('flight-svg');
+  const flightPath  = document.getElementById('flight-path');
+  const planeGroup  = document.getElementById('plane-group');
+  const afterPlane  = document.getElementById('after-plane');
+  let planeShown    = false;
+
+  function showPortfolio() {
+    if (planeShown) return; planeShown = true;
+
+    /* fade out dance + ctas */
+    [dance, hintTR, topCta, scrollCta].forEach(el => {
+      el.style.transition = 'opacity .5s';
+      el.style.opacity = '0';
+    });
+
+    /* show portfolio section */
+    portfolio.classList.add('visible');
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      portfolio.classList.add('faded-in');
+      startPlaneAnim();
+    }));
+  }
+
+  function startPlaneAnim() {
+    const totalLen = flightPath.getTotalLength();
+
+    /* fade path in */
+    flightPath.style.transition = 'opacity .6s';
+    flightPath.style.opacity    = '0.55';
+
+    setTimeout(() => {
+      planeGroup.style.opacity = '1';
+      const start = performance.now();
+      const dur   = 2600;
+
+      (function frame(now) {
+        const t      = Math.min((now - start) / dur, 1);
+        const eased  = t < .5 ? 2*t*t : -1+(4-2*t)*t;
+        const dist   = eased * totalLen;
+        const pt     = flightPath.getPointAtLength(dist);
+        const ptNext = flightPath.getPointAtLength(Math.min(dist + 6, totalLen));
+        const angle  = Math.atan2(ptNext.y - pt.y, ptNext.x - pt.x) * 180 / Math.PI;
+
+        planeGroup.setAttribute('transform', `translate(${pt.x},${pt.y}) rotate(${angle})`);
+
+        if (t < 1) {
+          requestAnimationFrame(frame);
+        } else {
+          /* plane reached end — fade entire SVG out */
+          flightSvg.style.opacity = '0';
+          /* show next content */
+          setTimeout(() => afterPlane.classList.add('show'), 900);
+        }
+      })(start);
+    }, 600);
+  }
+
+  /* scroll / click triggers */
+  scrollCta.addEventListener('click', showPortfolio);
+  window.addEventListener('wheel', e => {
+    if (scrollCta.classList.contains('show') && e.deltaY > 0) showPortfolio();
+  }, { passive:true });
 
   /* landing click */
   let clicked = false;

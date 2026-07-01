@@ -37,8 +37,7 @@
 
     .ring {
       position:absolute; border-radius:50%;
-      border:1px solid rgba(255,255,255,.07);
-      pointer-events:none;
+      border:1px solid rgba(255,255,255,.07); pointer-events:none;
       animation:pulse-ring 3s ease-in-out infinite;
     }
     @keyframes pulse-ring { 0%,100%{transform:scale(1);opacity:.4} 50%{transform:scale(1.04);opacity:.9} }
@@ -46,38 +45,28 @@
     #welcome {
       font-family:'Caveat',cursive;
       font-size:clamp(20px,3vw,36px);
-      font-weight:700;
-      color:rgba(255,255,255,.55);
-      text-align:center;
+      font-weight:700; color:rgba(255,255,255,.55); text-align:center;
     }
-
     #phrase {
       font-family:'Caveat',cursive;
       font-size:clamp(40px,8vw,100px);
       font-weight:700; color:#fff;
-      text-align:center; line-height:1.1;
-      padding:0 20px; user-select:none;
+      text-align:center; line-height:1.1; padding:0 20px; user-select:none;
     }
     .word {
       display:inline-block;
-      transition:transform .18s cubic-bezier(.34,1.56,.64,1), color .18s;
-      cursor:none;
+      transition:transform .18s cubic-bezier(.34,1.56,.64,1), color .18s; cursor:none;
     }
     .word:hover { transform:rotate(-5deg) scale(1.12); color:#ffda79; }
     .word:nth-child(even):hover { transform:rotate(5deg) scale(1.12); }
-
     #hint {
-      font-size:11px; font-weight:500;
-      letter-spacing:4px; text-transform:uppercase;
+      font-size:11px; font-weight:500; letter-spacing:4px; text-transform:uppercase;
       color:rgba(255,255,255,.8); margin-top:8px;
       animation:pulse-hint 2s ease-in-out infinite;
     }
     @keyframes pulse-hint { 0%,100%{opacity:.65} 50%{opacity:1} }
 
-    .confetti {
-      position:fixed; width:8px; height:8px;
-      border-radius:2px; pointer-events:none; opacity:0;
-    }
+    .confetti { position:fixed; width:8px; height:8px; border-radius:2px; pointer-events:none; opacity:0; }
 
     /* ── SCREEN 2 — DANCE ── */
     #dance {
@@ -91,30 +80,27 @@
 
     #cat-wrap {
       position:relative;
-      width:clamp(380px,58vw,780px);
-      aspect-ratio:16/9;
+      width:clamp(340px,50vw,620px);
+      aspect-ratio:1/1;
       overflow:hidden;
-      border-radius:16px;
+      border-radius:20px;
       background:#000;
       cursor:none;
     }
 
-    #cat-overlay { position:absolute; inset:0; z-index:3; cursor:none; }
-
-    #yt {
-      position:absolute;
+    #cat-gif {
+      position:absolute; inset:0;
       width:100%; height:100%;
-      top:0; left:0;
-      border:none;
-      pointer-events:none;
+      object-fit:cover;
     }
 
-    /* enjoyed — top right, hidden until after 2 loops */
+    #cat-overlay { position:absolute; inset:0; z-index:3; cursor:none; }
+
+    /* enjoyed — top right */
     #top-cta {
       position:fixed; top:28px; right:32px;
       z-index:30; text-align:right;
-      opacity:0; pointer-events:none;
-      transition:opacity .8s ease;
+      opacity:0; pointer-events:none; transition:opacity .8s ease;
     }
     #top-cta.show { opacity:1; pointer-events:auto; }
     #top-cta p {
@@ -124,13 +110,12 @@
     }
     #top-cta em { font-style:normal; color:#ffda79; display:block; }
 
-    /* scroll down — bottom centre, hidden until after 2 loops */
+    /* scroll down — bottom centre */
     #bot-cta {
       position:fixed; bottom:28px; left:50%;
       transform:translateX(-50%);
       z-index:30; text-align:center;
-      opacity:0; pointer-events:none;
-      transition:opacity .8s ease;
+      opacity:0; pointer-events:none; transition:opacity .8s ease;
     }
     #bot-cta.show { opacity:1; pointer-events:auto; cursor:none; }
     #bot-cta p {
@@ -161,7 +146,8 @@
 <!-- SCREEN 2 -->
 <div id="dance">
   <div id="cat-wrap">
-    <iframe id="yt" allow="autoplay; encrypted-media"></iframe>
+    <!-- scuba cat GIF — black background, auto-loops, no green screen -->
+    <img id="cat-gif" alt=""/>
     <div id="cat-overlay"></div>
   </div>
 </div>
@@ -177,6 +163,12 @@
   <span class="arr">↓ scroll down ↓</span>
 </div>
 
+<!-- audio-only YouTube iframe, hidden off-screen -->
+<iframe id="yt-audio"
+  style="position:fixed;left:-9999px;top:-9999px;width:1px;height:1px;pointer-events:none;"
+  allow="autoplay; encrypted-media">
+</iframe>
+
 <script>
   /* cursor */
   const cur = document.getElementById('cur');
@@ -185,7 +177,7 @@
     cur.style.top  = e.clientY + 'px';
   });
 
-  /* build landing phrase */
+  /* landing phrase */
   const words = ['click','here','to','dance','with','me'];
   const phraseEl = document.getElementById('phrase');
   words.forEach((w, i) => {
@@ -203,7 +195,7 @@
     landing.appendChild(s);
   }
 
-  /* confetti burst */
+  /* confetti */
   const COLS = ['#ffda79','#ff79c6','#a29bfe','#74b9ff','#55efc4','#fd79a8','#fff'];
   function burst(x, y) {
     for (let i = 0; i < 55; i++) {
@@ -219,62 +211,48 @@
     }
   }
 
-  /* YouTube via direct src + postMessage for loop counting */
-  /* OG Cat vibing – black background, free to use */
-  const YT_SRC = 'https://www.youtube.com/embed/hj8nPrRQU-8' +
-    '?autoplay=1&controls=0&rel=0&playsinline=1' +
-    '&disablekb=1&fs=0&iv_load_policy=3&modestbranding=1&mute=0&enablejsapi=1';
+  /* dance logic */
+  const catGif  = document.getElementById('cat-gif');
+  const ytAudio = document.getElementById('yt-audio');
+  const topCta  = document.getElementById('top-cta');
+  const botCta  = document.getElementById('bot-cta');
+  const dance   = document.getElementById('dance');
 
-  const ytEl   = document.getElementById('yt');
-  const dance  = document.getElementById('dance');
-  const topCta = document.getElementById('top-cta');
-  const botCta = document.getElementById('bot-cta');
-  let loopCount = 0;
+  /* scuba cat GIF (black bg) + original scuba cat video for audio */
+  const GIF_SRC   = 'https://media1.tenor.com/m/Rd0jrWH5JjgAAAAd/cat-scuba.gif';
+  const AUDIO_SRC = 'https://www.youtube.com/embed/hrQzECgGiP0' +
+    '?autoplay=1&mute=0&controls=0&rel=0&playsinline=1' +
+    '&disablekb=1&fs=0&iv_load_policy=3&modestbranding=1&loop=1&playlist=hrQzECgGiP0';
 
-  /* listen for state changes from YouTube player */
-  window.addEventListener('message', e => {
-    if (!e.data) return;
-    let data;
-    try { data = JSON.parse(e.data); } catch { return; }
+  const GIF_LOOP_MS = 10100; // GIF is ~10.1 s per loop
+  let loopTimer = null;
 
-    /* subscribe to events once player is ready */
-    if (data.event === 'onReady') {
-      ytEl.contentWindow.postMessage(
-        JSON.stringify({event:'listening', id: data.id || 1}), '*'
-      );
-    }
+  function startDance() {
+    /* restart GIF from frame 1 */
+    catGif.src = '';
+    catGif.src = GIF_SRC;
+    /* restart audio */
+    ytAudio.src = AUDIO_SRC;
+    /* show "enjoyed" text after 2 full GIF loops */
+    clearTimeout(loopTimer);
+    loopTimer = setTimeout(() => {
+      topCta.classList.add('show');
+      setTimeout(() => botCta.classList.add('show'), 400);
+    }, GIF_LOOP_MS * 2);
+  }
 
-    /* video ended */
-    if (data.event === 'infoDelivery' && data.info && data.info.playerState === 0) {
-      loopCount++;
-      if (loopCount < 2) {
-        /* seek back to 0 and replay */
-        ytEl.contentWindow.postMessage(JSON.stringify({event:'command', func:'seekTo',    args:[0, true]}), '*');
-        ytEl.contentWindow.postMessage(JSON.stringify({event:'command', func:'playVideo', args:[]}),        '*');
-      } else {
-        /* after 2 plays: show the text */
-        topCta.classList.add('show');
-        setTimeout(() => botCta.classList.add('show'), 400);
-      }
-    }
-  });
-
-  /* click cat → hide text, reset, replay */
+  /* click cat → hide text and restart */
   document.getElementById('cat-overlay').addEventListener('click', () => {
-    loopCount = 0;
     topCta.classList.remove('show');
     botCta.classList.remove('show');
-    ytEl.contentWindow.postMessage(JSON.stringify({event:'command', func:'seekTo',    args:[0, true]}), '*');
-    ytEl.contentWindow.postMessage(JSON.stringify({event:'command', func:'playVideo', args:[]}),        '*');
+    startDance();
   });
 
   /* landing click */
   let clicked = false;
   landing.addEventListener('click', e => {
     if (clicked) return; clicked = true;
-
-    ytEl.src = YT_SRC; /* set src synchronously → autoplay+audio allowed */
-
+    startDance(); /* called synchronously in click handler → audio autoplay allowed */
     burst(e.clientX, e.clientY);
     setTimeout(() => {
       landing.style.display = 'none';

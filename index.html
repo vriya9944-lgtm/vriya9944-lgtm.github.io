@@ -101,13 +101,13 @@
     }
     #dance.open { clip-path:circle(150% at 50% 50%); }
 
-    /* cat container — crops the YouTube green screen tightly */
+    /* cat container */
     #cat-wrap {
       position:relative;
-      width:clamp(260px,36vw,440px);
-      aspect-ratio:1/1;
+      width:clamp(300px,44vw,560px);
+      aspect-ratio:16/9;
       overflow:hidden;
-      border-radius:12px;
+      border-radius:16px;
       cursor:none;
     }
 
@@ -119,11 +119,10 @@
 
     #yt {
       position:absolute;
-      /* zoom + offset to crop to just the cat, remove green edges */
-      width:260%; height:260%;
-      top:-65%; left:-80%;
+      width:100%; height:100%;
+      top:0; left:0;
       border:none;
-      filter:hue-rotate(152deg) saturate(1.7) brightness(.92);
+      filter:hue-rotate(152deg) saturate(1.6) brightness(0.88);
       pointer-events:none;
     }
 
@@ -192,7 +191,7 @@
 <div id="landing">
   <div class="ring" style="width:min(55vw,380px);height:min(55vw,380px);"></div>
   <div class="ring" style="width:min(75vw,520px);height:min(75vw,520px);animation-delay:.9s;animation-duration:3.5s;"></div>
-  <p id="welcome">hi welcome, let's dance! 🎉</p>
+  <p id="welcome">hi welcome, let's dance!</p>
   <div id="phrase"></div>
   <p id="hint">click anywhere</p>
 </div>
@@ -276,9 +275,12 @@
         autoplay:0, controls:0, loop:0,
         modestbranding:1, rel:0, playsinline:1,
         disablekb:1, fs:0, iv_load_policy:3,
-        cc_load_policy:0, color:'white'
+        cc_load_policy:0, mute:0
       },
       events:{
+        onReady: function(e){
+          if(danceStarted){ loopCount=0; e.target.playVideo(); }
+        },
         onStateChange:onStateChange
       }
     });
@@ -311,14 +313,15 @@
   let clicked=false;
   landing.addEventListener('click',e=>{
     if(clicked) return; clicked=true;
+    danceStarted=true;
     burst(e.clientX,e.clientY);
     setTimeout(()=>landing.classList.add('out'),80);
     setTimeout(()=>{
       landing.style.display='none';
       loopCount=0;
-      if(player && player.playVideo) player.playVideo();
       dance.style.zIndex='15';
       requestAnimationFrame(()=>requestAnimationFrame(()=>dance.classList.add('open')));
+      if(player && typeof player.playVideo==='function') player.playVideo();
     },480);
   });
 

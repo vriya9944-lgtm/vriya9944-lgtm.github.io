@@ -31,6 +31,16 @@
     }
     @keyframes twinkle { 0%,100%{opacity:0} 50%{opacity:.55} }
 
+    .sparkle {
+      position:absolute; line-height:1; pointer-events:none; user-select:none;
+      opacity:0;
+      animation:sparkle-pop var(--d,3s) ease-in-out infinite var(--delay,0s);
+    }
+    @keyframes sparkle-pop {
+      0%,100% { opacity:0; transform:scale(.4) rotate(0deg); }
+      45%,55% { opacity:1; transform:scale(1) rotate(22deg); }
+    }
+
     .ring {
       position:absolute; border-radius:50%;
       border:1px solid rgba(255,255,255,.07); pointer-events:none;
@@ -452,17 +462,22 @@
 
   /* landing click */
   let clicked = false;
-  /* stars on the right side of the baby photo screen */
+  /* pinterest sparkle stars on the right side of the baby photo screen */
   const afterPlaneEl = document.getElementById('after-plane');
-  for (let i = 0; i < 60; i++) {
-    const s = document.createElement('div'); s.className = 'star';
-    const size = 2 + Math.random() * 3;
+  const sparkleChars = ['✦','✧','✦','✦','✧','✦'];
+  const sparkleSizes = [13,18,24,30,38,46];
+  const sparkleColors = ['#fff','#fff','#fff','#fde68a','#fff','#f9a8d4'];
+  for (let i = 0; i < 28; i++) {
+    const s = document.createElement('span'); s.className = 'sparkle';
+    s.textContent = sparkleChars[Math.floor(Math.random()*sparkleChars.length)];
+    const sz = sparkleSizes[Math.floor(Math.random()*sparkleSizes.length)];
     s.style.cssText = `
-      left:${55 + Math.random()*42}%;
-      top:${Math.random()*100}%;
-      width:${size}px; height:${size}px;
-      --d:${2+Math.random()*4}s;
-      --delay:${Math.random()*4}s;
+      left:${56 + Math.random()*40}%;
+      top:${Math.random()*93}%;
+      font-size:${sz}px;
+      color:${sparkleColors[Math.floor(Math.random()*sparkleColors.length)]};
+      --d:${2.5+Math.random()*4}s;
+      --delay:${Math.random()*5}s;
     `;
     afterPlaneEl.appendChild(s);
   }

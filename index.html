@@ -161,17 +161,16 @@
 
     /* ── MOODBOARD ── */
     #collage-wrap {
-      position:absolute; inset:0;
+      position:fixed; inset:0;
+      width:100vw; height:100vh;
       background:#000;
-      display:flex; align-items:center; justify-content:center;
+      overflow:hidden;
     }
     #collage-img {
-      position:absolute; inset:0;
-      width:100%; height:100%;
-      object-fit:contain;
-      border-radius:0;
-      transition:transform .5s ease;
-      filter:drop-shadow(0 0 60px rgba(0,0,0,.9));
+      width:100vw; height:100vh;
+      object-fit:cover;
+      object-position:center;
+      display:block;
     }
   </style>
 </head>

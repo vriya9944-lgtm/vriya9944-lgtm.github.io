@@ -452,6 +452,21 @@
 
   /* landing click */
   let clicked = false;
+  /* stars on the right side of the baby photo screen */
+  const afterPlaneEl = document.getElementById('after-plane');
+  for (let i = 0; i < 60; i++) {
+    const s = document.createElement('div'); s.className = 'star';
+    const size = 2 + Math.random() * 3;
+    s.style.cssText = `
+      left:${55 + Math.random()*42}%;
+      top:${Math.random()*100}%;
+      width:${size}px; height:${size}px;
+      --d:${2+Math.random()*4}s;
+      --delay:${Math.random()*4}s;
+    `;
+    afterPlaneEl.appendChild(s);
+  }
+
   landing.addEventListener('click', e => {
     if (clicked) return; clicked = true;
     startDance(); /* synchronous → audio autoplay allowed */

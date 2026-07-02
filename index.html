@@ -53,14 +53,6 @@
     }
     .word:hover { transform:rotate(-5deg) scale(1.12); color:#ffda79; }
     .word:nth-child(even):hover { transform:rotate(5deg) scale(1.12); }
-    #baby-photo {
-      position:fixed; left:3vw; top:50%; transform:translateY(-50%) rotate(-3deg);
-      width:clamp(200px,22vw,320px); height:auto;
-      border:9px solid #fff;
-      box-shadow:0 8px 32px rgba(0,0,0,.55), 0 2px 8px rgba(0,0,0,.3);
-      pointer-events:none; z-index:19;
-    }
-
     #hint {
       font-size:11px; font-weight:500; letter-spacing:4px; text-transform:uppercase;
       color:rgba(255,255,255,.8); margin-top:8px;
@@ -164,22 +156,22 @@
       opacity:0; transition:opacity 1.4s ease;
       overflow:hidden;
       background:#000;
+      display:flex;
+      align-items:center;
+      justify-content:flex-start;
     }
     #after-plane.show { opacity:1; }
 
-    /* ── MOODBOARD ── */
-    #collage-wrap {
-      position:fixed; inset:0;
-      width:100vw; height:100vh;
-      background:#000;
-      overflow:hidden;
-    }
-    #collage-img {
-      width:100vw; height:100vh;
-      object-fit:cover;
-      object-position:center;
-      display:block;
-      margin:0; padding:0;
+    #baby-display {
+      position:relative;
+      left:8vw;
+      width:clamp(320px,42vw,620px);
+      height:auto;
+      filter:
+        drop-shadow(0 0 3px #fff)
+        drop-shadow(0 0 3px #fff)
+        drop-shadow(0 0 14px rgba(255,255,255,.65))
+        drop-shadow(0 0 40px rgba(255,255,255,.2));
     }
   </style>
 </head>
@@ -195,8 +187,6 @@
   <div id="phrase"></div>
   <p id="hint">click anywhere</p>
 </div>
-
-<img id="baby-photo" src="images/baby-photo.png" alt="baby photo">
 
 <!-- DANCE -->
 <div id="dance">
@@ -229,9 +219,7 @@
   </div>
 
   <div id="after-plane">
-    <div id="collage-wrap">
-      <img id="collage-img" src="images/collage.png" alt="riya virdi collage">
-    </div>
+    <img id="baby-display" src="images/baby-photo.png" alt="baby photo">
   </div>
 </div>
 

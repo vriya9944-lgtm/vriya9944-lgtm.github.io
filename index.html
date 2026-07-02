@@ -155,7 +155,7 @@
       position:absolute; inset:0;
       opacity:0; transition:opacity 1.4s ease;
       overflow:hidden;
-      background:#000;
+      background:#0a0a0a;
     }
     #after-plane.show { opacity:1; }
 
@@ -163,12 +163,13 @@
     #collage-wrap {
       position:fixed; inset:0;
       width:100vw; height:100vh;
-      background:#000;
+      background:#0a0a0a;
+      display:flex; align-items:center; justify-content:center;
       overflow:hidden;
     }
     #collage-img {
       width:100vw; height:100vh;
-      object-fit:cover;
+      object-fit:contain;
       object-position:center;
       display:block;
     }
